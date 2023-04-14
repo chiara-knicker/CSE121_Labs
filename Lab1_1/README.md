@@ -44,9 +44,9 @@ sudo wpa_cli -i wlan0 list_networks
 Output should look like this:  
 network id / ssid / bssid / flags
 ```
-0       your_wifi_name any  
+0       your_wifi_name          any  
 1       your_second_wifi_name   any  
-2       eduroam any     [CURRENT]
+2       eduroam any             [CURRENT]
 ```
 
 [CURRENT] tells you which wifi you are connected to
