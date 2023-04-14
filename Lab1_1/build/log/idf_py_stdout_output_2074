@@ -1,0 +1,44 @@
+-- Existing sdkconfig '/home/chiar/CSE121_Labs/Lab1_1/sdkconfig' renamed to '/home/chiar/CSE121_Labs/Lab1_1/sdkconfig.old'.
+-- Found Git: /usr/bin/git (found version "2.34.1") 
+-- The C compiler identification is GNU 12.2.0
+-- The CXX compiler identification is GNU 12.2.0
+-- The ASM compiler identification is GNU
+-- Found assembler: /home/chiar/.espressif/tools/riscv32-esp-elf/esp-12.2.0_20230208/riscv32-esp-elf/bin/riscv32-esp-elf-gcc
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /home/chiar/.espressif/tools/riscv32-esp-elf/esp-12.2.0_20230208/riscv32-esp-elf/bin/riscv32-esp-elf-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /home/chiar/.espressif/tools/riscv32-esp-elf/esp-12.2.0_20230208/riscv32-esp-elf/bin/riscv32-esp-elf-g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Building ESP-IDF components for target esp32c3
+-- Project sdkconfig file /home/chiar/CSE121_Labs/Lab1_1/sdkconfig
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of time_t
+-- Check size of time_t - done
+-- Found Python3: /home/chiar/.espressif/python_env/idf5.1_py3.10_env/bin/python (found version "3.10.6") found components: Interpreter 
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
+-- App "hello_world" version: b1f194e
+-- Adding linker script /home/chiar/CSE121_Labs/Lab1_1/build/esp-idf/esp_system/ld/memory.ld
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/esp_system/ld/esp32c3/sections.ld.in
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/esp_rom/esp32c3/ld/esp32c3.rom.ld
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/esp_rom/esp32c3/ld/esp32c3.rom.api.ld
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/esp_rom/esp32c3/ld/esp32c3.rom.libgcc.ld
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/esp_rom/esp32c3/ld/esp32c3.rom.newlib.ld
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/esp_rom/esp32c3/ld/esp32c3.rom.version.ld
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/esp_rom/esp32c3/ld/esp32c3.rom.eco3.ld
+-- Adding linker script /home/chiar/CSE121_Labs/esp-idf/components/soc/esp32c3/ld/esp32c3.peripherals.ld
+-- Components: app_trace app_update bootloader bootloader_support bt cmock console cxx driver efuse esp-tls esp_adc esp_app_format esp_coex esp_common esp_eth esp_event esp_gdbstub esp_hid esp_http_client esp_http_server esp_https_ota esp_https_server esp_hw_support esp_lcd esp_local_ctrl esp_mm esp_netif esp_netif_stack esp_partition esp_phy esp_pm esp_psram esp_ringbuf esp_rom esp_system esp_timer esp_wifi espcoredump esptool_py fatfs freertos hal heap http_parser idf_test ieee802154 json log lwip main mbedtls mqtt newlib nvs_flash openthread partition_table protobuf-c protocomm pthread riscv sdmmc soc spi_flash spiffs tcp_transport ulp unity usb vfs wear_levelling wifi_provisioning wpa_supplicant
+-- Component paths: /home/chiar/CSE121_Labs/esp-idf/components/app_trace /home/chiar/CSE121_Labs/esp-idf/components/app_update /home/chiar/CSE121_Labs/esp-idf/components/bootloader /home/chiar/CSE121_Labs/esp-idf/components/bootloader_support /home/chiar/CSE121_Labs/esp-idf/components/bt /home/chiar/CSE121_Labs/esp-idf/components/cmock /home/chiar/CSE121_Labs/esp-idf/components/console /home/chiar/CSE121_Labs/esp-idf/components/cxx /home/chiar/CSE121_Labs/esp-idf/components/driver /home/chiar/CSE121_Labs/esp-idf/components/efuse /home/chiar/CSE121_Labs/esp-idf/components/esp-tls /home/chiar/CSE121_Labs/esp-idf/components/esp_adc /home/chiar/CSE121_Labs/esp-idf/components/esp_app_format /home/chiar/CSE121_Labs/esp-idf/components/esp_coex /home/chiar/CSE121_Labs/esp-idf/components/esp_common /home/chiar/CSE121_Labs/esp-idf/components/esp_eth /home/chiar/CSE121_Labs/esp-idf/components/esp_event /home/chiar/CSE121_Labs/esp-idf/components/esp_gdbstub /home/chiar/CSE121_Labs/esp-idf/components/esp_hid /home/chiar/CSE121_Labs/esp-idf/components/esp_http_client /home/chiar/CSE121_Labs/esp-idf/components/esp_http_server /home/chiar/CSE121_Labs/esp-idf/components/esp_https_ota /home/chiar/CSE121_Labs/esp-idf/components/esp_https_server /home/chiar/CSE121_Labs/esp-idf/components/esp_hw_support /home/chiar/CSE121_Labs/esp-idf/components/esp_lcd /home/chiar/CSE121_Labs/esp-idf/components/esp_local_ctrl /home/chiar/CSE121_Labs/esp-idf/components/esp_mm /home/chiar/CSE121_Labs/esp-idf/components/esp_netif /home/chiar/CSE121_Labs/esp-idf/components/esp_netif_stack /home/chiar/CSE121_Labs/esp-idf/components/esp_partition /home/chiar/CSE121_Labs/esp-idf/components/esp_phy /home/chiar/CSE121_Labs/esp-idf/components/esp_pm /home/chiar/CSE121_Labs/esp-idf/components/esp_psram /home/chiar/CSE121_Labs/esp-idf/components/esp_ringbuf /home/chiar/CSE121_Labs/esp-idf/components/esp_rom /home/chiar/CSE121_Labs/esp-idf/components/esp_system /home/chiar/CSE121_Labs/esp-idf/components/esp_timer /home/chiar/CSE121_Labs/esp-idf/components/esp_wifi /home/chiar/CSE121_Labs/esp-idf/components/espcoredump /home/chiar/CSE121_Labs/esp-idf/components/esptool_py /home/chiar/CSE121_Labs/esp-idf/components/fatfs /home/chiar/CSE121_Labs/esp-idf/components/freertos /home/chiar/CSE121_Labs/esp-idf/components/hal /home/chiar/CSE121_Labs/esp-idf/components/heap /home/chiar/CSE121_Labs/esp-idf/components/http_parser /home/chiar/CSE121_Labs/esp-idf/components/idf_test /home/chiar/CSE121_Labs/esp-idf/components/ieee802154 /home/chiar/CSE121_Labs/esp-idf/components/json /home/chiar/CSE121_Labs/esp-idf/components/log /home/chiar/CSE121_Labs/esp-idf/components/lwip /home/chiar/CSE121_Labs/Lab1_1/main /home/chiar/CSE121_Labs/esp-idf/components/mbedtls /home/chiar/CSE121_Labs/esp-idf/components/mqtt /home/chiar/CSE121_Labs/esp-idf/components/newlib /home/chiar/CSE121_Labs/esp-idf/components/nvs_flash /home/chiar/CSE121_Labs/esp-idf/components/openthread /home/chiar/CSE121_Labs/esp-idf/components/partition_table /home/chiar/CSE121_Labs/esp-idf/components/protobuf-c /home/chiar/CSE121_Labs/esp-idf/components/protocomm /home/chiar/CSE121_Labs/esp-idf/components/pthread /home/chiar/CSE121_Labs/esp-idf/components/riscv /home/chiar/CSE121_Labs/esp-idf/components/sdmmc /home/chiar/CSE121_Labs/esp-idf/components/soc /home/chiar/CSE121_Labs/esp-idf/components/spi_flash /home/chiar/CSE121_Labs/esp-idf/components/spiffs /home/chiar/CSE121_Labs/esp-idf/components/tcp_transport /home/chiar/CSE121_Labs/esp-idf/components/ulp /home/chiar/CSE121_Labs/esp-idf/components/unity /home/chiar/CSE121_Labs/esp-idf/components/usb /home/chiar/CSE121_Labs/esp-idf/components/vfs /home/chiar/CSE121_Labs/esp-idf/components/wear_levelling /home/chiar/CSE121_Labs/esp-idf/components/wifi_provisioning /home/chiar/CSE121_Labs/esp-idf/components/wpa_supplicant
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/chiar/CSE121_Labs/Lab1_1/build
