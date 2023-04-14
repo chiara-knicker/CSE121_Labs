@@ -20,7 +20,7 @@ sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-v
 cd ~/CSE121_Labs  
 git clone --recursive https://github.com/espressif/esp-idf.git  
 cd esp-idf  
-./install.sh esp32c  
+./install.sh esp32c3  
 . export.sh  
 
 # Run labs
