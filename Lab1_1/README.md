@@ -37,7 +37,7 @@ network:
 netplan generate  
 netplan apply
 
-#Check Connection
+# Check Connection
 check that the wifi networks show up:  
 sudo wpa_cli -i wlan0 list_networks
 
