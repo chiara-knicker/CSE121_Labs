@@ -37,6 +37,7 @@ network:
 netplan generate  
 netplan apply
 
+#Check Connection
 check that the wifi networks show up:  
 sudo wpa_cli -i wlan0 list_networks
 
@@ -53,5 +54,7 @@ iwgetid
 
 Output should look like this:  
 wlan0     ESSID:"wifi_name"
+
+You might have to install iwgetid first.
 
 
