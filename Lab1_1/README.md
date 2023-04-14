@@ -20,7 +20,7 @@ network:
         wlan0:
             access-points:
                 your_second_wifi_name:
-                    password: cyour_password
+                    password: your_password
             dhcp4: true
             optional: true
         wlan0:
