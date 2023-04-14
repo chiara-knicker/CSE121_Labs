@@ -41,9 +41,9 @@ netplan apply
 check that the wifi networks show up:  
 sudo wpa_cli -i wlan0 list_networks
 
-Output should look like this:  
-network id / ssid / bssid / flags
+Output should look like this:
 ```
+network id / ssid / bssid / flags
 0       your_wifi_name          any  
 1       your_second_wifi_name   any  
 2       eduroam any             [CURRENT]
