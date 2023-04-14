@@ -15,7 +15,8 @@ Labs for CSE 121 Spring 2023
 # Setup to run labs
 sudo apt update  
 sudo apt upgrade  
-sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0  
+sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
+
 cd ~/CSE121_Labs  
 git clone --recursive https://github.com/espressif/esp-idf.git  
 cd esp-idf  
@@ -41,5 +42,8 @@ cat [path-to-public-key]/id_ed25519.pub
 copy the public key and add it to your GitHub account:  
 "settings" > "SSH and GPG keys", paste the public key you copied
 
-git config --global user.email "your email"  
-git config --global user.name "your name"  
+git config --global user.email "your_email"  
+git config --global user.name "your_name"
+
+# ESP32 Resources
+https://github.com/esp-rs/esp-rust-board
