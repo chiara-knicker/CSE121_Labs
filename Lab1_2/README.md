@@ -1,3 +1,24 @@
+# Lab 1.1
+Get hello_world example project
+```
+cp -a ~/CSE121_Labs/esp-idf/examples/get-started/hello_world ~/CSE121_Labs/Lab1_1
+```
+Edit hello_world_main.c
+```
+cd ~/CSE121_Labs/Lab1_1/main
+```
+```
+sudo vim hello_world_main.c
+```
+Edit file so that after printing "Minimum free heap..." it prints your name
+```
+...
+printf("Your Name\n");
+...
+```
+
+# Provided README
+
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-H2 | ESP32-H4 | ESP32-S2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
 
