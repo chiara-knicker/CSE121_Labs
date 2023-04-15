@@ -21,7 +21,9 @@ cd ~/CSE121_Labs
 git clone --recursive https://github.com/espressif/esp-idf.git  
 cd esp-idf  
 ./install.sh esp32c3  
-. export.sh  
+. export.sh
+
+Need to rerun . export.sh after each shutdown of the Pi4
 
 # Run labs
 cd ~/CSE121_Labs/Labx_x  
@@ -44,6 +46,13 @@ copy the public key and add it to your GitHub account:
 
 git config --global user.email "your_email"  
 git config --global user.name "your_name"
+
+# Issues encountered
+When trying to flash the first time, I got this Error:
+```
+(need to reproduce error)
+```
+It turned out that the cable I was using to connect the ESP32 to the Pi4 was only for charging. When I used a different cable it worked.
 
 # ESP32 Resources
 https://github.com/esp-rs/esp-rust-board
