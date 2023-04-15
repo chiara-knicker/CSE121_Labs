@@ -1,4 +1,5 @@
-# Setup Wifi
+# Lab 1.1
+## Setup Wifi
 ```
 sudo vim /etc/netplan/50-cloud-init.yaml
 ```
@@ -43,7 +44,7 @@ netplan generate
 netplan apply
 ```
 
-# Check Connection
+## Check Connection
 Check that the wifi networks show up
 ```
 sudo wpa_cli -i wlan0 list_networks
@@ -71,7 +72,7 @@ wlan0     ESSID:"wifi_name"
 
 You might have to install iwgetid first.
 
-# Issues encountered
+## Issues encountered
 After editing the file, listing the networks returned this:
 ```
 network id / ssid / bssid / flags
