@@ -1,7 +1,9 @@
 # Setup Wifi
+```
 sudo vim /etc/netplan/50-cloud-init.yaml
+```
 
-edit file to look like this:
+Edit file to look like this:
 ```
 network:
     version: 2
@@ -34,12 +36,18 @@ network:
                         phase2-auth: "MSCHAPV2"
 ```
 
-netplan generate  
+```
+netplan generate
+```
+```
 netplan apply
+```
 
 # Check Connection
-check that the wifi networks show up:  
+Check that the wifi networks show up
+```
 sudo wpa_cli -i wlan0 list_networks
+```
 
 Output should look like this:
 ```
@@ -52,7 +60,9 @@ network id / ssid / bssid / flags
 [CURRENT] tells you which wifi you are connected to
 
 You can also check which wifi you're connected to like this:  
+```
 iwgetid
+```
 
 Output should look like this:
 ```
