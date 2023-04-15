@@ -24,7 +24,7 @@ sudo apt upgrade
 sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
 ```
 
-# Get ESP32 software toolchain
+Get ESP32 software toolchain
 ```
 cd ~/CSE121_Labs
 ```
