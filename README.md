@@ -14,9 +14,15 @@ Labs for CSE 121 Spring 2023
 
 # Setup to run labs
 Upgrade Ubuntu and install required packages
-```  sudo apt update  ```  
-```sudo apt upgrade```
-```sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0```
+```
+sudo apt update
+```  
+```
+sudo apt upgrade
+```
+```
+sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
+```
 
 # Get ESP32 software toolchain
 ```cd ~/CSE121_Labs```
