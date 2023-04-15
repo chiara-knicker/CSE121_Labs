@@ -3,7 +3,7 @@ Labs for CSE 121 Spring 2023
 
 # Hardware
 - Raspberyy Pi 4
-- ESP32 board
+- ESP32C3 board
 
 # Setup Pi4
 - install Pi Imager: https://www.raspberrypi.com/software/
@@ -13,27 +13,29 @@ Labs for CSE 121 Spring 2023
 - insert microSD in Pi4
 
 # Setup to run labs
-sudo apt update  
-sudo apt upgrade  
-sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
+Upgrade Ubuntu and install required packages
+```sudo apt update```  
+```sudo apt upgrade```
+```sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0```
 
-cd ~/CSE121_Labs  
-git clone --recursive https://github.com/espressif/esp-idf.git  
-cd esp-idf  
-./install.sh esp32c3  
-. export.sh
+# Get ESP32 software toolchain
+```cd ~/CSE121_Labs```
+```git clone --recursive https://github.com/espressif/esp-idf.git``` 
+```cd esp-idf```
+```./install.sh esp32c3```
+```. export.sh```
 
 Need to rerun . export.sh after each shutdown of the Pi4
 
 # Run labs
-cd ~/CSE121_Labs/Labx_x  
-idf.py set-target esp32c3  
-idf.py flash  
-idf.py monitor  
+```cd ~/CSE121_Labs/Labx_x``` 
+```idf.py set-target esp32c3```
+```idf.py flash```
+```idf.py monitor```
 
 NOTE: flash automatically builds before flashing, to only build, run this after setting the target:  
-cd build  
-ninja  
+```cd build```
+```ninja```
 
 To stop monitor: ctrl+] or ctrl+t ctrl+x for some keyboards (e.g. German)
 
