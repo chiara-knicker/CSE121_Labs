@@ -75,3 +75,6 @@ The pixel number indicates the pixel position in the LED strip. For a single LED
 * If the LED isn't blinking, check the GPIO or the LED type selection in the `Example Configuration` menu.
 
 For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+
+# My changes
+As per the lab instructions, I moved the code in main to a function called blink_task and then used xTaskCreate in main to call blink_task. I also changed the GPIO number to 2 (GPIO_NUM_2). The ESP32 GitHub linked in the root README under Resources shows the GPIO layout I used to determine the correct GPIO number.
