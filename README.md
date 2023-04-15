@@ -6,14 +6,14 @@ Labs for CSE 121 Spring 2023
 - ESP32C3 board
 
 # Setup Pi4
-- install Pi Imager: https://www.raspberrypi.com/software/
-- open Pi Imager and select Ubuntu Server 22.04.2 LTS (64-bit) as OS
-- configure SSH and Wifi
-- flash microSD
-- insert microSD in Pi4
+1. Install Pi Imager: https://www.raspberrypi.com/software/
+2. Open Pi Imager and select Ubuntu Server 22.04.2 LTS (64-bit) as OS
+3. Configure SSH and Wifi
+4. Flash microSD
+5. Insert microSD in Pi4
 
 # Setup to run labs
-Upgrade Ubuntu and install required packages
+1. Upgrade Ubuntu and install required packages
 ```
 sudo apt update
 ```  
@@ -24,7 +24,7 @@ sudo apt upgrade
 sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
 ```
 
-Get ESP32 software toolchain
+2. Get ESP32 software toolchain
 ```
 cd ~/CSE121_Labs
 ```
@@ -57,7 +57,10 @@ idf.py flash
 idf.py monitor
 ```
 
-NOTE: flash automatically builds before flashing, to only build, run this after setting the target:  
+To stop monitor:  
+ctrl+] or ctrl+t ctrl+x for some keyboards (e.g. German)
+
+Flash automatically builds before flashing. To only build, run this after setting the target:  
 ```
 cd build
 ```
@@ -65,19 +68,21 @@ cd build
 ninja
 ```
 
-To stop monitor: ctrl+] or ctrl+t ctrl+x for some keyboards (e.g. German)
-
 # Use GitHub on Pi4
+1. Create ssh key
 ```
 ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
+  
+2. Copy the public key and add it to your GitHub account
 ```
 cat [path-to-public-key]/id_ed25519.pub
 ```
-  
-copy the public key and add it to your GitHub account:  
-"settings" > "SSH and GPG keys", paste the public key you copied
+"Settings" > "SSH and GPG keys"
 
+Paste the public key you copied
+
+3. Configure user
 ```
 git config --global user.email "your_email"
 ```
