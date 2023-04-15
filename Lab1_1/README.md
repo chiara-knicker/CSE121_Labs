@@ -35,7 +35,7 @@ network:
                         identity: "your_eduroam_email"
                         phase2-auth: "MSCHAPV2"
 ```
-
+Apply changes
 ```
 netplan generate
 ```
