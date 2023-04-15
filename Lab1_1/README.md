@@ -61,4 +61,12 @@ wlan0     ESSID:"wifi_name"
 
 You might have to install iwgetid first.
 
-
+# Issues encountered
+After editing the file, listing the networks returned this:
+```
+network id / ssid / bssid / flags
+0       your_wifi_name          any  
+1       your_second_wifi_name   any  
+2       eduroam any             [TEMP-DISABLED]
+```
+It turned out that I used the wrong password. Changing the file, and running netplan generate and netplan apply again fixed it.
