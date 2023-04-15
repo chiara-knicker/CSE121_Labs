@@ -92,5 +92,5 @@ When trying to flash the first time, I got this Error:
 ```
 It turned out that the cable I was using to connect the ESP32 to the Pi4 was only for charging. When I used a different cable it worked.
 
-# ESP32 Resources
+# ESP32C3 Resources
 https://github.com/esp-rs/esp-rust-board
