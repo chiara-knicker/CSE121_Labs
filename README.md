@@ -25,35 +25,65 @@ sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-v
 ```
 
 # Get ESP32 software toolchain
-```cd ~/CSE121_Labs```
-```git clone --recursive https://github.com/espressif/esp-idf.git``` 
-```cd esp-idf```
-```./install.sh esp32c3```
-```. export.sh```
+```
+cd ~/CSE121_Labs
+```
+```
+git clone --recursive https://github.com/espressif/esp-idf.git
+``` 
+```
+cd esp-idf
+```
+```
+./install.sh esp32c3
+```
+```
+. export.sh
+```
 
 Need to rerun . export.sh after each shutdown of the Pi4
 
 # Run labs
-```cd ~/CSE121_Labs/Labx_x``` 
-```idf.py set-target esp32c3```
-```idf.py flash```
-```idf.py monitor```
+```
+cd ~/CSE121_Labs/Labx_x
+``` 
+```
+idf.py set-target esp32c3
+```
+```
+idf.py flash
+```
+```
+idf.py monitor
+```
 
 NOTE: flash automatically builds before flashing, to only build, run this after setting the target:  
-```cd build```
-```ninja```
+```
+cd build
+```
+```
+ninja
+```
 
 To stop monitor: ctrl+] or ctrl+t ctrl+x for some keyboards (e.g. German)
 
 # Use GitHub on Pi4
-ssh-keygen -t ed25519 -C "your_email@example.com"  
+```
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+```
 cat [path-to-public-key]/id_ed25519.pub
+```
   
 copy the public key and add it to your GitHub account:  
 "settings" > "SSH and GPG keys", paste the public key you copied
 
-git config --global user.email "your_email"  
+```
+git config --global user.email "your_email"
+```
+```
 git config --global user.name "your_name"
+```
 
 # Issues encountered
 When trying to flash the first time, I got this Error:
