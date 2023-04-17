@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/chiar/CSE121_Labs/Lab2_1/build/CMakeFiles/bootloader
+/home/chiar/CSE121_Labs/Lab2_1/build/CMakeFiles/bootloader.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/CMakeFiles/bootloader-complete.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/chiar/CSE121_Labs/Lab2_1/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
