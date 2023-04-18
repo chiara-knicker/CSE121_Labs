@@ -62,3 +62,10 @@ sudo wget https://raw.githubusercontent.com/espressif/openocd-esp32/master/contr
 sudo udevadm trigger
 ```
 This gives openocd access to usb connections, which is how it will have access to the esp32.
+
+Error: couldn't bind tcl to socket on port 6666: Address already in use
+Solution:
+```
+ps aux | grep openocd
+```
+kill all openocd processes
