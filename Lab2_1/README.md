@@ -17,10 +17,6 @@ mv [elf_file_name.elf] build
 ```
 mv [elf_file_name.elf] [existing_elf_file_name]
 ```
-Run openocd in separate terminal (remember to run . export.sh for each new session)
-```
-idf.py openocd
-```
 Create and edit gdbinit file
 ```
 touch gdbinit
@@ -43,6 +39,10 @@ wget https://github.com/espressif/binutils-gdb/releases/download/esp-gdb-v12.1_2
 ```
 ```
 tar -xvzf riscv32-esp-elf-gdb-12.1_20221002-aarch64-linux-gnu.tar.gz
+```
+Run openocd in separate terminal (remember to run . export.sh for each new session)
+```
+idf.py openocd
 ```
 Run gdb
 ```
