@@ -17,7 +17,7 @@ mv [elf_file_name.elf] build
 ```
 mv [elf_file_name.elf] [existing_elf_file_name]
 ```
-Run openocd in separate terminal
+Run openocd in separate terminal (remember to run . export.sh for each new session)
 ```
 idf.py openocd
 ```
@@ -41,9 +41,12 @@ Install riscv-esp-elf-gdb
 ```
 wget https://github.com/espressif/binutils-gdb/releases/download/esp-gdb-v12.1_20221002/riscv32-esp-elf-gdb-12.1_20221002-aarch64-linux-gnu.tar.gz
 ```
+```
+tar -xvzf riscv32-esp-elf-gdb-12.1_20221002-aarch64-linux-gnu.tar.gz
+```
 Run gdb
 ```
-riscv32-esp-elf-gdb -x gdbinit build/xxx.elf
+riscv32-esp-elf-gdb -x gdbinit build/Lab2_1.elf
 ```
 
 # Issues
