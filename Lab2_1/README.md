@@ -37,6 +37,10 @@ flushregs
 thb app_main
 c
 ```
+Install riscv-esp-elf-gdb
+```
+wget https://github.com/espressif/binutils-gdb/releases/download/esp-gdb-v12.1_20221002/riscv32-esp-elf-gdb-12.1_20221002-aarch64-linux-gnu.tar.gz
+```
 Run gdb
 ```
 riscv32-esp-elf-gdb -x gdbinit build/xxx.elf
