@@ -17,13 +17,9 @@ mv [elf_file_name.elf] build
 ```
 mv [elf_file_name.elf] [existing_elf_file_name]
 ```
-Run openocd
+Run openocd in separate terminal
 ```
 idf.py openocd
-```
-Run gdb
-```
-riscv32-esp-elf-gdb -x gdbinit build/xxx.elf
 ```
 Create and edit gdbinit file
 ```
@@ -40,6 +36,10 @@ mon reset halt
 flushregs
 thb app_main
 c
+```
+Run gdb
+```
+riscv32-esp-elf-gdb -x gdbinit build/xxx.elf
 ```
 
 # Issues
