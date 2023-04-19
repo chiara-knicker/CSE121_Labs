@@ -1,0 +1,51 @@
+Open On-Chip Debugger v0.12.0-esp32-20230313 (2023-03-13-09:07)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : only one transport option; autoselecting 'jtag'
+Info : esp_usb_jtag: VID set to 0x303a and PID to 0x1001
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+Warn : Transport "jtag" was already selected
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+Info : esp_usb_jtag: serial (34:85:18:01:8F:CC)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.cpu tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : datacount=2 progbufsize=16
+Info : Examined RISC-V core; found 1 harts
+Info :  hart 0: XLEN=32, misa=0x40101104
+Info : starting gdb server for esp32c3 on 3333
+Info : Listening on port 3333 for gdb connections
+Info : accepting 'gdb' connection on tcp/3333
+Warn : No symbols for FreeRTOS!
+Info : [esp32c3] Found 8 triggers
+Info : Flash mapping 0: 0x10020 -> 0x3c020020, 38 KB
+Info : Flash mapping 1: 0x20020 -> 0x42000020, 108 KB
+Info : Auto-detected flash bank 'esp32c3.flash' size 4096 KB
+Info : Using flash bank 'esp32c3.flash' size 4096 KB
+Info : Flash mapping 0: 0x10020 -> 0x3c020020, 38 KB
+Info : Flash mapping 1: 0x20020 -> 0x42000020, 108 KB
+Info : Using flash bank 'esp32c3.irom' size 112 KB
+Info : Flash mapping 0: 0x10020 -> 0x3c020020, 38 KB
+Info : Flash mapping 1: 0x20020 -> 0x42000020, 108 KB
+Info : Using flash bank 'esp32c3.drom' size 40 KB
+Warn : negative reply, retrying
+Warn : negative reply, retrying
+Warn : Prefer GDB command "target extended-remote :3333" instead of "target remote :3333"
+Info : Detected FreeRTOS version: (10.4.3)
+Info : JTAG tap: esp32c3.cpu tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : Reset cause (3) - (Software core reset)
+Info : Detected FreeRTOS version: (10.4.3)
+Info : dropped 'gdb' connection
+Info : accepting 'gdb' connection on tcp/3333
+Info : JTAG tap: esp32c3.cpu tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : Reset cause (3) - (Software core reset)
+Info : Detected FreeRTOS version: (10.4.3)
+Info : dropped 'gdb' connection
+Info : accepting 'gdb' connection on tcp/3333
+Info : JTAG tap: esp32c3.cpu tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : Reset cause (3) - (Software core reset)
+Info : Detected FreeRTOS version: (10.4.3)
+Info : dropped 'gdb' connection
+shutdown command invoked
