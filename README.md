@@ -99,3 +99,7 @@ It turned out that the cable I was using to connect the ESP32 to the Pi4 was onl
 
 # ESP32C3 Resources
 https://github.com/esp-rs/esp-rust-board
+
+https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
+
+https://web.cecs.pdx.edu/~apt/cs491/gdb.pdf
