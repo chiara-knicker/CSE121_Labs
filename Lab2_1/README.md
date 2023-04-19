@@ -30,7 +30,6 @@ target remote :3333
 set remote hardware-watchpoint-limit 2
 mon reset halt
 flushregs
-thb app_main
 c
 ```
 Install riscv-esp-elf-gdb
@@ -51,6 +50,30 @@ Run gdb
 ```
 riscv32-esp-elf-gdb -x gdbinit build/Lab2_1.elf
 ```
+Find address of compute function
+```
+info functions compute
+```
+Set breakpoint at compute address
+```
+b *[address]
+```
+Run
+```
+run
+```
+Look at registers
+```
+info registers
+```
+Look at https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf to figure out which registers contain function arguments.
+Find the registers in output (a0 - a2), should look like this:
+```
+a0             0x21     33
+a1             0x0      0
+a2             0x4      4
+```
+33, 0, 4 are the values we wanted to find
 
 # Issues
 Issue with openocd permissions: LIBUSB_ERROR_ACCESS
