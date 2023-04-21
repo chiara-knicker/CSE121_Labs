@@ -1,1 +1,0 @@
-cmd='/usr/bin/cmake;-DSDKCONFIG=/home/chiar/esp/lab1_3/sdkconfig;-DIDF_PATH=/home/chiar/esp/esp-idf;-DIDF_TARGET=esp32c3;-DPYTHON_DEPS_CHECKED=1;-DPYTHON=/home/chiar/.espressif/python_env/idf5.1_py3.10_env/bin/python;-DEXTRA_COMPONENT_DIRS=/home/chiar/esp/esp-idf/components/bootloader;-DPROJECT_SOURCE_DIR=/home/chiar/esp/lab1_3;-GNinja;<SOURCE_DIR><SOURCE_SUBDIR>'
