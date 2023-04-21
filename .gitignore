@@ -1,3 +1,4 @@
 /esp-idf/
 build/
 sdkconfig
+riscv32-esp-elf-gdb/
