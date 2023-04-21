@@ -85,17 +85,31 @@ static float calculate_humidity(uint16_t raw_humidity)
     return 100.0 * (float)raw_humidity / 65535.0;
 }
 
+static float calculate_temp(uint16_t raw_temp)
+{
+    return -45 + 175 * raw_temp / 65535.0;
+}
+
+static float calculate_temp_f(uint16_t raw_temp)
+{
+    return calculate_temp(raw_temp) * 1.8 + 32;
+}
+
 void shtc3_task(){
     while(1){
 
         uint8_t data[6] = {0,};
         uint16_t raw_humidity=0;
+	uint16_t raw_temp=0;
 
         esp_err_t err = shtc3_read(SHTC3_CMD_MEASURE, data, 6);
         if(err == ESP_OK){
             raw_humidity = (data[3] << 8) | data[4];
+	    raw_temp = (data[0] << 8) | data[1];
             float humidity = calculate_humidity(raw_humidity);
-            ESP_LOGI(TAG, "Humidity: %.2f %%", humidity);
+	    float temp = calculate_temp(raw_temp);
+	    float temp_f = calculate_temp_f(raw_temp);
+            ESP_LOGI(TAG, "Temperature is %.2fC (or %.2fF) with a %.2f %%  humidity", temp, temp_f, humidity);
         } else {
             ESP_LOGI(TAG, "Failed to read data from SHTC3 sensor %d", err);
         }
@@ -103,6 +117,7 @@ void shtc3_task(){
         vTaskDelay(pdMS_TO_TICKS(2000));
     }
 }
+
 void app_main(void){
     esp_err_t err = i2c_master_init();
     if(err != ESP_OK) {
