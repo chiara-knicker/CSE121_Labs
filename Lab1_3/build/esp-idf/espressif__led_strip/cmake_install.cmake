@@ -1,4 +1,4 @@
-# Install script for directory: /home/chiar/esp/lab1_3/managed_components/espressif__led_strip
+# Install script for directory: /home/chiar/CSE121_Labs/Lab1_3/managed_components/espressif__led_strip
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

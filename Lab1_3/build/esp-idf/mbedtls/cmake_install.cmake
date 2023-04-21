@@ -1,4 +1,4 @@
-# Install script for directory: /home/chiar/esp/esp-idf/components/mbedtls
+# Install script for directory: /home/chiar/CSE121_Labs/esp-idf/components/mbedtls
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,6 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/chiar/esp/lab1_3/build/esp-idf/mbedtls/mbedtls/cmake_install.cmake")
+  include("/home/chiar/CSE121_Labs/Lab1_3/build/esp-idf/mbedtls/mbedtls/cmake_install.cmake")
 endif()
 

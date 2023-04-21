@@ -1,4 +1,4 @@
-# Install script for directory: /home/chiar/esp/esp-idf/components/esp_psram
+# Install script for directory: /home/chiar/CSE121_Labs/esp-idf/components/esp_psram
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

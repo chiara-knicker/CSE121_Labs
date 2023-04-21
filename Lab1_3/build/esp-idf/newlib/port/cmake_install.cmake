@@ -1,4 +1,4 @@
-# Install script for directory: /home/chiar/esp/esp-idf/components/newlib/port
+# Install script for directory: /home/chiar/CSE121_Labs/esp-idf/components/newlib/port
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

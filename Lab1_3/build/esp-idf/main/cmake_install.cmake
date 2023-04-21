@@ -1,4 +1,4 @@
-# Install script for directory: /home/chiar/esp/lab1_3/main
+# Install script for directory: /home/chiar/CSE121_Labs/Lab1_3/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

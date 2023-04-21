@@ -1,4 +1,4 @@
-# Install script for directory: /home/chiar/esp/esp-idf/components/hal
+# Install script for directory: /home/chiar/CSE121_Labs/esp-idf/components/hal
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
