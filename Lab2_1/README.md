@@ -3,7 +3,7 @@ Create new project
 ```
 idf.py create-project Lab2_1
 ```
-Download elf file and set target
+Set target
 ```
 cd Lab2_1
 ```
@@ -12,12 +12,18 @@ idf.py set-target esp32c3
 ```
 Move elf file to build folder and rename it to existing elf file name
 ```
-mv [elf_file_name.elf] build
+mv [file_path]/lab2_image.elf build
 ```
 ```
-mv [elf_file_name.elf] [existing_elf_file_name]
+cd build
 ```
-Create and edit gdbinit file
+```
+mv lab2_image.elf [existing_elf_file_name]
+```
+Go back to Lab2_1 directory and create and edit gdbinit file
+```
+cd ..
+```
 ```
 touch gdbinit
 ```
@@ -34,6 +40,9 @@ c
 ```
 Install riscv-esp-elf-gdb
 ```
+cd ..
+```
+```
 wget https://github.com/espressif/binutils-gdb/releases/download/esp-gdb-v12.1_20221002/riscv32-esp-elf-gdb-12.1_20221002-aarch64-linux-gnu.tar.gz
 ```
 ```
@@ -43,6 +52,9 @@ tar -xvzf riscv32-esp-elf-gdb-12.1_20221002-aarch64-linux-gnu.tar.gz
 rm -r riscv32-esp-elf-gdb-12.1_20221002-aarch64-linux-gnu.tar.gz
 ```
 Run openocd in separate terminal (remember to run . export.sh for each new session)
+```
+cd Lab2_1
+```
 ```
 idf.py openocd
 ```
