@@ -97,9 +97,18 @@ When trying to flash the first time, I got this Error:
 ```
 It turned out that the cable I was using to connect the ESP32 to the Pi4 was only for charging. When I used a different cable it worked.
 
-# ESP32C3 Resources
+# Resources
+## ESP32C3
+ESP32C3 Github <br>
 https://github.com/esp-rs/esp-rust-board
 
+Temperature and humidity sensor datasheet <br>
+https://www.mouser.com/datasheet/2/682/Sensirion_04202018_HT_DS_SHTC3_Preliminiary_D2-1323493.pdf
+
+Accelerometer and gyroscope datasheet <br>
+https://invensense.tdk.com/wp-content/uploads/2021/07/DS-000451-ICM-42670-P-v1.0.pdf
+
+## Lab 2
 https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
 
 https://web.cecs.pdx.edu/~apt/cs491/gdb.pdf
