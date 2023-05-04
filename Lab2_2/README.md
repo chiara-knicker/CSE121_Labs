@@ -40,7 +40,7 @@ This is the I2C address of the SHTC3 sensor, which can be found on the github pa
 ```
 These commands are sent to the sensor to request the sensor ID and to initiate temperature and humidity measurements.
 
-0xEFCS8 tells sensor to read out the ID register and can be used to verify the presence of the sensor and proper communication. It can be found in the datasheet (5.9).
+0xEFCS8 tells sensor to read out the ID register and can be used to verify the presence of the sensor and proper communication. It can be found in the datasheet (5.9). We don't actually need this for this lab.
 
 0x7CA2 enables clock stretching, puts the sensor in normal mode and tells it to read the temperature first. The datasheet (5.3) contains a table that summarizes the available measurement commands.
 
@@ -80,9 +80,11 @@ static esp_err_t shtc3_read(uint16_t command, uint8_t *data, size_t size)
 ```
 shtc3_read() reads the temperature and humidity data from the SHTC3 sensor. It takes 3 parameters:
 
-command: command code to be sent to sensor
-data: pointer to an array that will store received data
-size: size of data to be received
+- command: command code to be sent to sensor
+- data: pointer to an array that will store received data
+- size: size of data to be received
+
+The datasheet (5.4) specifies the communication sequence for waking up the sensor, starting a measurement and reading measurement results. The sensor is already up, so we don't need the wakeup command and we also don't use the sleep command. All we need to do is send the measurement command and read the data.
 
 ```
 i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -97,7 +99,7 @@ i2c_master_write_byte(cmd, (SHTC3_SENSOR_ADDR <<1) | I2C_MASTER_WRITE, true);
 i2c_master_write_byte(cmd, command >> 8, true);
 i2c_master_write_byte(cmd, command & 0xFF, true);
 ```
-These send the sensor's address and write bit, the command code and its arguments.
+These send the sensor's address and write bit, the command code, and its arguments.
 
 (SHTC3_SENSOR_ADDR << 1) | I2C_MASTER_WRITE: creates a byte that contains both the sensor address (shifted left by 1 bit) and the write bit (set to 0). The | operator is a bitwise OR operator that combines the two values. The 8th bit in the address byte is used to indicate whether the master device wants to write to or read from the slave device.
 
