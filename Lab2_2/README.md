@@ -40,9 +40,9 @@ This is the I2C address of the SHTC3 sensor, which can be found on the github pa
 ```
 These commands are sent to the sensor to request the sensor ID and to initiate temperature and humidity measurements.
 
-0xEFCS8 tells sensor to read out the ID register and can be sued to verify the presence of the sensor and proper communication. It can be found on page 8 of the datasheet.
+0xEFCS8 tells sensor to read out the ID register and can be used to verify the presence of the sensor and proper communication. It can be found in the datasheet (5.9).
 
-0x7CA2 enables clock stretching, puts the sensor in normal mode and tells it to read the temperature first. The table on page 7 of the datasheet summarizes the available measurement commands.
+0x7CA2 enables clock stretching, puts the sensor in normal mode and tells it to read the temperature first. The datasheet (5.3) contains a table that summarizes the available measurement commands.
 
 ## I2C Initialization
 ```
@@ -128,4 +128,40 @@ i2c_master_read(cmd, data, size, I2C_MASTER_LAST_NACK);
 This reads the data from the sensor and store it in the data array.
 
 ## Calculate Temperature and Humidity
+calculate_humidity, calculate_temp and calculate_temp_f take the raw measurement and return the actual humidity and temperature value (Celsius and Fahrenheit). The formulas can be found on the sensor datasheet (5.11).
 
+## shtc3_task
+This function is the main task that reads sensor data and calculates the actual temperature and humidity values using the previous functions.
+```
+uint8_t data[6] = {0,};
+uint16_t raw_humidity=0;
+uint16_t raw_temp=0;
+```
+This declares some variables to store the sensor data. 
+```
+esp_err_t err = shtc3_read(SHTC3_CMD_MEASURE, data, 6);
+```
+This calls the shtc3_read function with the SHTC3_CMD_MEASURE command to read the temperature and humidity data from the sensor. 
+```
+if(err == ESP_OK){
+      raw_humidity = (data[3] << 8) | data[4];
+      raw_temp = (data[0] << 8) | data[1];
+      float humidity = calculate_humidity(raw_humidity);
+      float temp = calculate_temp(raw_temp);
+      float temp_f = calculate_temp_f(raw_temp);
+      ESP_LOGI(TAG, "Temperature is %.2fC (or %.2fF) with a %.2f %%  humidity", temp, temp_f, humidity);
+  } else {
+      ESP_LOGI(TAG, "Failed to read data from SHTC3 sensor %d", err);
+  }
+```
+If the reading is successful, the function extracts the raw humidity and temperature values from the received data and calculates the actual temperature and humidity values using the calculate_humidity, calculate_temp, and calculate_temp_f functions. 
+
+The sensor sends the temperature first and then the humidity data, as we specified with the measurement command. The sensor sends a total of 6 bytes, the first 3 bytes are for temperature and the last 3 bytes are for humidity. The first two bytes of each 3 byte block are the measurements and the third byte is a checksum that we won't need. This information can be found in the datasheet (5.4).
+
+To parse the temperature and humidity data from the raw bytes, we first need to combine the two bytes for each measurement into a single 16-bit integer. We can do this using bit shifting and bitwise OR operations. data[0] and data[3] contain the high byte of the temperature and humidity data respectively, and data[1] and data[4] contain the low byte. We shift data[0] and data [3] left by 8 bits (the equivalent of multiplying by 256) to make room for the low byte, and then use a bitwise OR operation to combine the two bytes into a single 16-bit integer.
+
+Finally, the function prints the calculated values using the ESP_LOGI function, which logs a message to the console with the specified tag, message, and arguments.
+```
+vTaskDelay(pdMS_TO_TICKS(2000));
+```
+This makes the function waits for 2 seconds before starting the loop again. This loop will continue indefinitely, continuously reading the sensor data and printing the actual temperature and humidity values to the console.
