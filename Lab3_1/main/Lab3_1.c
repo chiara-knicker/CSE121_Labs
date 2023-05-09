@@ -101,6 +101,23 @@ void read_gyro() {
   gyro_z = gyro_z_raw / 16.4;
 
   printf("Gyroscope: X=%.2lf, Y=%.2lf, Z=%.2lf\n", gyro_x, gyro_y, gyro_z);
+
+  // x-axis: UP/DOWN
+  if (gyro_x > 5) {
+	  printf("TILT UP\n");
+  }
+  else if (gyro_x < -5) {
+	  printf("TILT DOWN\n");
+  }
+
+  // y-axis: LEFT/RIGHT
+  if (gyro_y > 5) {
+          printf("TILT RIGHT\n");
+  }
+  else if (gyro_y < -5) {
+          printf("TILT LEFT\n");
+  } 
+
 }
 
 void read_accel() {
@@ -115,6 +132,23 @@ void read_accel() {
   acc_z = (float) acc_z_raw / 2048;
 
   printf("Accelerometer: X=%.2lf, Y=%.2lf, Z=%.2lf\n", acc_x, acc_y, acc_z);
+
+   // x-axis: LEFT/RIGHT
+  if (acc_x > 0.05) {
+          printf("MOVE LEFT\n");
+  }
+  else if (acc_x < -0.05) {
+          printf("MOVE RIGHT\n");
+  }
+
+  // y-axis: FORWARD/BAKWARDS
+  if (acc_y > 0.05) {
+          printf("MOVE BACKWARD\n");
+  }
+  else if (acc_y < -0.05) {
+          printf("MOVE FORWARDS\n");
+  }
+
 }
 
 
@@ -129,6 +163,6 @@ void app_main()
   {
     read_gyro();
     read_accel();
-    vTaskDelay(pdMS_TO_TICKS(100)); // wait 100 milliseconds before reading again
+    vTaskDelay(pdMS_TO_TICKS(500)); // wait 100 milliseconds before reading again
   }
 }
