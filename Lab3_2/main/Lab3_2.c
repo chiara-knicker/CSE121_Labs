@@ -8,36 +8,6 @@
 
 #define DEVICE_NAME "ESP32-C3 Mouse"
 
-/* Mouse Report Descriptor */
-static uint8_t mouse_report_descriptor[] = {
-    0x05, 0x01,       /* Usage Page (Generic Desktop) */
-    0x09, 0x02,       /* Usage (Mouse) */
-    0xA1, 0x01,       /* Collection (Application) */
-    0x09, 0x01,       /* Usage (Pointer) */
-    0xA1, 0x00,       /* Collection (Physical) */
-    0x05, 0x09,       /* Usage Page (Buttons) */
-    0x19, 0x01,       /* Usage Minimum (01) */
-    0x29, 0x01,       /* Usage Maximum (01) */
-    0x15, 0x00,       /* Logical Minimum (0) */
-    0x25, 0x01,       /* Logical Maximum (1) */
-    0x95, 0x01,       /* Report Count (1) */
-    0x75, 0x01,       /* Report Size (1) */
-    0x81, 0x02,       /* Input (Data, Variable, Absolute) */
-    0x95, 0x01,       /* Report Count (1) */
-    0x75, 0x05,       /* Report Size (5) */
-    0x81, 0x01,       /* Input (Constant) */
-    0x05, 0x01,       /* Usage Page (Generic Desktop) */
-    0x09, 0x30,       /* Usage (X) */
-    0x09, 0x31,       /* Usage (Y) */
-    0x15, 0x81,       /* Logical Minimum (-127) */
-    0x25, 0x7F,       /* Logical Maximum (127) */
-    0x75, 0x08,       /* Report Size (8) */
-    0x95, 0x02,       /* Report Count (2) */
-    0x81, 0x06,       /* Input (Data, Variable, Relative) */
-    0xC0,             /* End Collection */
-    0xC0              /* End Collection */
-};
-
 /* Advertisement data */
 static esp_ble_adv_data_t adv_data = {
     .set_scan_rsp = false,
@@ -55,42 +25,6 @@ static esp_ble_adv_data_t adv_data = {
     .flag = 0x6, // BLE-only device, does not support BR/EDR feature
     // .flag = (ESP_BLE_ADV_FLAG_GEN_DISC | ESP_BLE_ADV_FLAG_BREDR_NOT_SPT),
 };
-
-/* BLE GATT server configuration */
-/*
-static esp_ble_gatts_cb_t gatts_cb = {};
-
-static esp_ble_gatts_attr_db_t gatts_attr_db[] = {
-    {
-        .attr_control = {
-            .auto_rsp = ESP_GATT_AUTO_RSP,
-        },
-        .att_desc = {
-		.uuid = {
-			.len = ESP_UUID_LEN_16,
-			.uuid = {.uuid16 = ESP_GATT_UUID_HID_REPORT},
-		},
-		.perm = ESP_GATT_PERM_READ,
-        	.max_len = 50,
-        	.length = sizeof(mouse_report_descriptor),
-        	.p_value = mouse_report_descriptor,
-    	},
-    },
-};
-
-static esp_ble_gatts_service_t gatts_service = {
-	.uuid = {
-		.len = ESP_UUID_LEN_16,
-		.uuid = {.uuid16 = ESP_GATT_UUID_HIDS},
-	},
-	.inst_id = 0,
-	.is_primary = true,
-	.num_handle = 1,
-	.included_service = NULL,
-	.handle = NULL,
-	.end_handle = NULL,
-	.characteristic = gatts_attr_db,
-};*/
 
 /* GATT server event handler */
 static void gatts_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param) {
