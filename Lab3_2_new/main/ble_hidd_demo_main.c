@@ -174,25 +174,12 @@ void hid_demo_task(void *pvParameters)
             ESP_LOGI(HID_DEMO_TAG, "Send mouse values");
             //send_volum_up = true;
 	    // mouse values
-	    uint8_t move_x = 100;
-	    uint8_t move_y = 100;
+	    uint8_t move_x = 500;
+	    uint8_t move_y = 0;
 	    uint8_t button = 0;
 	    // send mouse values
 	    esp_hidd_send_mouse_value(hid_conn_id, button, move_x, move_y);
-	    vTaskDelay(pdMS_TO_TICKS(3000));
-	    // Keyboard example
-	    //uint8_t key_value = {HID_KEY_A};
-	    //esp_hidd_send_keyboard_value(hid_conn_id, 0, &key_value, 1);
-	    // volume example
-            //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, true);
-            //vTaskDelay(pdMS_TO_TICKS(3000));
-            //if (send_volum_up) {
-                //send_volum_up = false;
-                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, false);
-                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, true);
-                //vTaskDelay(pdMS_TO_TICKS(3000));
-                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, false);
-            //}
+	    vTaskDelay(pdMS_TO_TICKS(5000));
         }
     }
 }
