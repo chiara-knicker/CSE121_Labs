@@ -56,7 +56,7 @@ static bool send_volum_up = false;
 
 static void hidd_event_callback(esp_hidd_cb_event_t event, esp_hidd_cb_param_t *param);
 
-#define HIDD_DEVICE_NAME            "HID"
+#define HIDD_DEVICE_NAME            "ESP32C3_MOUSE"
 static uint8_t hidd_service_uuid128[] = {
     /* LSB <--------------------------------------------------------------------------------> MSB */
     //first uuid, 16bit, [12],[13] is the value
@@ -171,19 +171,28 @@ void hid_demo_task(void *pvParameters)
     while(1) {
         vTaskDelay(pdMS_TO_TICKS(2000));
         if (sec_conn) {
-            ESP_LOGI(HID_DEMO_TAG, "Send the volume");
-            send_volum_up = true;
-            //uint8_t key_vaule = {HID_KEY_A};
-            //esp_hidd_send_keyboard_value(hid_conn_id, 0, &key_vaule, 1);
-            esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, true);
-            vTaskDelay(pdMS_TO_TICKS(3000));
-            if (send_volum_up) {
-                send_volum_up = false;
-                esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, false);
-                esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, true);
-                vTaskDelay(pdMS_TO_TICKS(3000));
-                esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, false);
-            }
+            ESP_LOGI(HID_DEMO_TAG, "Send mouse values");
+            //send_volum_up = true;
+	    // mouse values
+	    uint8_t move_x = 100;
+	    uint8_t move_y = 100;
+	    uint8_t button = 0;
+	    // send mouse values
+	    esp_hidd_send_mouse_value(hid_conn_id, button, move_x, move_y);
+	    vTaskDelay(pdMS_TO_TICKS(3000));
+	    // Keyboard example
+	    //uint8_t key_value = {HID_KEY_A};
+	    //esp_hidd_send_keyboard_value(hid_conn_id, 0, &key_value, 1);
+	    // volume example
+            //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, true);
+            //vTaskDelay(pdMS_TO_TICKS(3000));
+            //if (send_volum_up) {
+                //send_volum_up = false;
+                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, false);
+                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, true);
+                //vTaskDelay(pdMS_TO_TICKS(3000));
+                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, false);
+            //}
         }
     }
 }
