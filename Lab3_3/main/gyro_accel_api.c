@@ -6,7 +6,7 @@
 
 #include "gyro_accel_api.h"
 
-//static const char *TAG = "lec2";
+static const char *TAG = "lec2";
 
 //#define I2C_MASTER_NUM I2C_NUM_0 // I2C port number
 //#define I2C_MASTER_SCL_IO 8 // GPIO number for I2C clock
@@ -15,7 +15,7 @@
 
 //#define ICM_ADDR 0x68 // I2C address of the ICM-42670-P sensor
 
-static esp_err_t i2c_master_init()
+esp_err_t i2c_master_init()
 {
   i2c_config_t conf = {
   	.mode = I2C_MODE_MASTER,

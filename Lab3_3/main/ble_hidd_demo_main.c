@@ -53,7 +53,7 @@
 
 static uint16_t hid_conn_id = 0;
 static bool sec_conn = false;
-static bool send_volum_up = false;
+
 #define CHAR_DECLARATION_SIZE   (sizeof(uint8_t))
 
 static void hidd_event_callback(esp_hidd_cb_event_t event, esp_hidd_cb_param_t *param);
