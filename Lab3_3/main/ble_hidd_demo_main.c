@@ -27,6 +27,8 @@
 #include "driver/gpio.h"
 #include "hid_dev.h"
 
+#include "gyro_accel_api.h"
+
 /**
  * Brief:
  * This example Implemented BLE HID device profile related functions, in which the HID device
@@ -169,10 +171,13 @@ void hid_demo_task(void *pvParameters)
 {
     vTaskDelay(pdMS_TO_TICKS(1000));
     while(1) {
+
+	read_gyro();
+	read_accel();
+
         vTaskDelay(pdMS_TO_TICKS(2000));
         if (sec_conn) {
             ESP_LOGI(HID_DEMO_TAG, "Send mouse values");
-            //send_volum_up = true;
 	    // mouse values
 	    uint8_t move_x = 100;
 	    uint8_t move_y = 100;
@@ -180,19 +185,6 @@ void hid_demo_task(void *pvParameters)
 	    // send mouse values
 	    esp_hidd_send_mouse_value(hid_conn_id, button, move_x, move_y);
 	    vTaskDelay(pdMS_TO_TICKS(3000));
-	    // Keyboard example
-	    //uint8_t key_value = {HID_KEY_A};
-	    //esp_hidd_send_keyboard_value(hid_conn_id, 0, &key_value, 1);
-	    // volume example
-            //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, true);
-            //vTaskDelay(pdMS_TO_TICKS(3000));
-            //if (send_volum_up) {
-                //send_volum_up = false;
-                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_UP, false);
-                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, true);
-                //vTaskDelay(pdMS_TO_TICKS(3000));
-                //esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_VOLUME_DOWN, false);
-            //}
         }
     }
 }
@@ -260,6 +252,11 @@ void app_main(void)
     and the init key means which key you can distribute to the slave. */
     esp_ble_gap_set_security_param(ESP_BLE_SM_SET_INIT_KEY, &init_key, sizeof(uint8_t));
     esp_ble_gap_set_security_param(ESP_BLE_SM_SET_RSP_KEY, &rsp_key, sizeof(uint8_t));
+
+    i2c_master_init();
+    icm_init();
+    acc_conf();
+    gyr_conf();
 
     xTaskCreate(&hid_demo_task, "hid_task", 2048, NULL, 5, NULL);
 }

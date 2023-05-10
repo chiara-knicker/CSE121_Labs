@@ -4,14 +4,16 @@
 #include <driver/i2c.h>
 #include "esp_log.h"
 
-static const char *TAG = "lec2";
+#include "gyro_accel_api.h"
 
-#define I2C_MASTER_NUM I2C_NUM_0 // I2C port number
-#define I2C_MASTER_SCL_IO 8 // GPIO number for I2C clock
-#define I2C_MASTER_SDA_IO 10 // GPIO number for I2C data
-#define I2C_MASTER_FREQ_HZ 100000 // I2C master clock frequency
+//static const char *TAG = "lec2";
 
-#define ICM_ADDR 0x68 // I2C address of the ICM-42670-P sensor
+//#define I2C_MASTER_NUM I2C_NUM_0 // I2C port number
+//#define I2C_MASTER_SCL_IO 8 // GPIO number for I2C clock
+//#define I2C_MASTER_SDA_IO 10 // GPIO number for I2C data
+//#define I2C_MASTER_FREQ_HZ 100000 // I2C master clock frequency
+
+//#define ICM_ADDR 0x68 // I2C address of the ICM-42670-P sensor
 
 static esp_err_t i2c_master_init()
 {
@@ -152,7 +154,7 @@ void read_accel() {
 }
 
 
-void app_main()
+/*void app_main()
 {
   i2c_master_init();
   icm_init();
@@ -165,4 +167,4 @@ void app_main()
     read_accel();
     vTaskDelay(pdMS_TO_TICKS(500)); // wait 100 milliseconds before reading again
   }
-}
+}*/
