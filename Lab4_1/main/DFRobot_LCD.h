@@ -44,8 +44,8 @@
 /*!
  *  @brief flags for display entry mode
  */
-#define LCD_ENTRYRIGHT 		0x00
-#define LCD_ENTRYLEFT 		0x02
+#define LCD_ENTRYRIGHT 		  0x00
+#define LCD_ENTRYLEFT 		  0x02
 #define LCD_ENTRYSHIFTINCREMENT 0x01
 #define LCD_ENTRYSHIFTDECREMENT 0x00
 
@@ -167,7 +167,7 @@ void noBlinkLED(void);
  *  @brief send data
  */
   
-virtual size_t write(uint8_t);
+void write(uint8_t);
 
 /*
  *  @brief send command
@@ -202,22 +202,21 @@ void draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pi
 void draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end);
   
 //using Print::write;
+void print(const char c[]);
   
 void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
 void send(uint8_t *data, uint8_t len);
 void setReg(uint8_t addr, uint8_t data);
-
 
 uint8_t _showfunction;
 uint8_t _showcontrol;
 uint8_t _showmode;
 uint8_t _initialized;
 uint8_t _numlines,_currline;
-uint8_t _lcdAddr;
-uint8_t _RGBAddr;
-uint8_t _cols;
-uint8_t _rows;
+uint8_t _lcdAddr = LCD_ADDRESS;
+uint8_t _RGBAddr = RGB_ADDRESS;
+uint8_t _cols = 16;
+uint8_t _rows = 2;
 uint8_t _backlightval;
-
 
 #endif
