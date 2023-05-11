@@ -171,20 +171,18 @@ void hid_demo_task(void *pvParameters)
 {
     vTaskDelay(pdMS_TO_TICKS(1000));
     while(1) {
+	float* accel_values = read_accel();
 
-	read_gyro();
-	read_accel();
-
-        vTaskDelay(pdMS_TO_TICKS(2000));
+        vTaskDelay(pdMS_TO_TICKS(100));
         if (sec_conn) {
             ESP_LOGI(HID_DEMO_TAG, "Send mouse values");
 	    // mouse values
-	    uint8_t move_x = 100;
-	    uint8_t move_y = 100;
-	    uint8_t button = 0;
+	    int8_t move_x = 10 * accel_values[0];
+	    int8_t move_y = 10 * accel_values[1];
+	    int8_t button = 0;
 	    // send mouse values
 	    esp_hidd_send_mouse_value(hid_conn_id, button, move_x, move_y);
-	    vTaskDelay(pdMS_TO_TICKS(3000));
+	    vTaskDelay(pdMS_TO_TICKS(500));
         }
     }
 }

@@ -91,7 +91,7 @@ uint8_t i2c_read(uint8_t reg)
   return data;
 }
 
-void read_gyro() {
+float*  read_gyro() {
   int16_t gyro_x_raw, gyro_y_raw, gyro_z_raw;
   gyro_x_raw = (i2c_read(0x11) << 8) | i2c_read(0x12);
   gyro_y_raw = (i2c_read(0x13) << 8) | i2c_read(0x14);
@@ -103,6 +103,11 @@ void read_gyro() {
   gyro_z = gyro_z_raw / 16.4;
 
   printf("Gyroscope: X=%.2lf, Y=%.2lf, Z=%.2lf\n", gyro_x, gyro_y, gyro_z);
+
+  float* gyro_values = (float*) malloc(3 * sizeof(float));
+  gyro_values[0] = gyro_x;
+  gyro_values[1] = gyro_y;
+  gyro_values[2] = gyro_z;
 
   // x-axis: UP/DOWN
   if (gyro_x > 5) {
@@ -118,11 +123,13 @@ void read_gyro() {
   }
   else if (gyro_y < -5) {
           printf("TILT LEFT\n");
-  } 
+  }
+
+  return gyro_values;
 
 }
 
-void read_accel() {
+float* read_accel() {
   int16_t acc_x_raw, acc_y_raw, acc_z_raw;
   acc_x_raw = (i2c_read(0x0B) << 8) | i2c_read(0x0C);
   acc_y_raw = (i2c_read(0x0D) << 8) | i2c_read(0x0E);
@@ -134,6 +141,11 @@ void read_accel() {
   acc_z = (float) acc_z_raw / 2048;
 
   printf("Accelerometer: X=%.2lf, Y=%.2lf, Z=%.2lf\n", acc_x, acc_y, acc_z);
+
+  float* accel_values = (float*) malloc(3 * sizeof(float));
+  accel_values[0] = acc_x;
+  accel_values[1] = acc_y;
+  accel_values[2] = acc_z;
 
    // x-axis: LEFT/RIGHT
   if (acc_x > 0.05) {
@@ -150,6 +162,8 @@ void read_accel() {
   else if (acc_y < -0.05) {
           printf("MOVE FORWARDS\n");
   }
+
+  return accel_values;
 
 }
 

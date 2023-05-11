@@ -30,8 +30,8 @@ void gyr_conf();
 
 uint8_t i2c_read(uint8_t reg);
 
-void read_gyro();
+float* read_gyro();
 
-void read_accel();
+float* read_accel();
 
 #endif
