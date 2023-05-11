@@ -114,13 +114,15 @@ https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
 https://web.cecs.pdx.edu/~apt/cs491/gdb.pdf
 
 ## Lab 3
-https://invensense.tdk.com/wp-content/uploads/2021/07/DS-000451-ICM-42670-P-v1.0.pdf
-
-https://github.com/espressif/esp-idf/blob/17451f1fb3d6485af5113d96b6836a7ce60efee8/examples/bluetooth/bluedroid/ble/ble_hid_device_demo/main/esp_hidd_prf_api.c
+Bluetooth example <br>
+https://github.com/espressif/esp-idf/blob/17451f1fb3d6485af5113d96b6836a7ce60efee8/examples/bluetooth/bluedroid/ble/ble_hid_device_demo
 
 ## Lab 4
+DFRobot GitHub <br>
 https://github.com/DFRobotdl/DFRobot_LCD
 
+DFR0554 Datasheet <br>
 https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/DFR0554_Web.pdf
 
+DFR0554 Datasheet <br>
 https://github.com/Arduinolibrary/DFRobot_Gravity_I2C_LCD1602_Display_module/raw/master/DFR0554%20Datasheet.pdf
