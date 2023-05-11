@@ -10,7 +10,6 @@
 #define LCD_ADDRESS     (0x7c>>1)
 #define RGB_ADDRESS     (0xc0>>1)
 
-
 /*!
  *  @brief color define
  */ 
@@ -187,21 +186,6 @@ void setBacklight(uint8_t new_val);						// alias for backlight() and nobackligh
 void load_custom_character(uint8_t char_num, uint8_t *rows);	// alias for createChar()
 void printstr(const char[]);
   
-/*
- *  @brief Unsupported API functions (not implemented in this library)
- */
-  
-uint8_t status();
-void setContrast(uint8_t new_val);
-uint8_t keypad();
-void setDelay(int,int);
-void on();
-void off();
-uint8_t init_bargraph(uint8_t graphtype);
-void draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end);
-void draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end);
-  
-//using Print::write;
 void print(const char c[]);
   
 void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
