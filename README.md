@@ -109,8 +109,10 @@ Accelerometer and gyroscope datasheet <br>
 https://invensense.tdk.com/wp-content/uploads/2021/07/DS-000451-ICM-42670-P-v1.0.pdf
 
 ## Lab 2
+RISC-V calling convention <br>
 https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
 
+Debugging assembly code with gdb <br>
 https://web.cecs.pdx.edu/~apt/cs491/gdb.pdf
 
 ## Lab 3
