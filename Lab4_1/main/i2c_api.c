@@ -35,8 +35,8 @@ esp_err_t i2c_master_init()
 
 // --------------------- Temperature and Humidity -----------------------
 
-void i2c_write_shtc3(uint16_t command){
-    
+void i2c_write_shtc3(uint16_t command)
+{    
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (SHTC3_SENSOR_ADDR <<1) | I2C_MASTER_WRITE, true);
@@ -53,8 +53,8 @@ void i2c_write_shtc3(uint16_t command){
     vTaskDelay(pdMS_TO_TICKS(20));
 }
 
-void i2c_read_shtc3(uint8_t *data, size_t size){
-
+void i2c_read_shtc3(uint8_t *data, size_t size)
+{
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (SHTC3_SENSOR_ADDR << 1) | I2C_MASTER_READ, true);
@@ -111,7 +111,8 @@ float* read_temp_hum()
 
 // --------------------- Accelerometer and Gyroscope -----------------------
 
-void i2c_write_icm(uint8_t reg, uint8_t data) {
+void i2c_write_icm(uint8_t reg, uint8_t data)
+{
   i2c_cmd_handle_t cmd = i2c_cmd_link_create();
   i2c_master_start(cmd);
   i2c_master_write_byte(cmd, (ICM_ADDR << 1) | I2C_MASTER_WRITE, true);
@@ -127,17 +128,20 @@ void i2c_write_icm(uint8_t reg, uint8_t data) {
   }
 }
 
-void icm_init() {
+void icm_init()
+{
   // PWR_MGMT0 register, gyro and eccel in LN mode and RC oscillator on
   i2c_write_icm(0x1F, 0b00011111);
 }
 
-void acc_conf() {
+void acc_conf()
+{
   // ACCEL_CONFIG0 register, set full-scale range to +/-16g 
   i2c_write_icm(0x21, 0b00011111);
 }
 
-void gyr_conf() {
+void gyr_conf()
+{
   // GYRO_CONFIG0 register, set full-scale range to +/-2000dps
   i2c_write_icm(0x20, 0b00001001);
 }
@@ -161,7 +165,8 @@ uint8_t i2c_read_icm(uint8_t reg)
   return data;
 }
 
-float*  read_gyro() {
+float*  read_gyro()
+{
   int16_t gyro_x_raw, gyro_y_raw, gyro_z_raw;
   gyro_x_raw = (i2c_read_icm(0x11) << 8) | i2c_read_icm(0x12);
   gyro_y_raw = (i2c_read_icm(0x13) << 8) | i2c_read_icm(0x14);
@@ -196,10 +201,10 @@ float*  read_gyro() {
   }
 
   return gyro_values;
-
 }
 
-float* read_accel() {
+float* read_accel()
+{
   int16_t acc_x_raw, acc_y_raw, acc_z_raw;
   acc_x_raw = (i2c_read_icm(0x0B) << 8) | i2c_read_icm(0x0C);
   acc_y_raw = (i2c_read_icm(0x0D) << 8) | i2c_read_icm(0x0E);
@@ -234,5 +239,4 @@ float* read_accel() {
   }
 
   return accel_values;
-
 }
