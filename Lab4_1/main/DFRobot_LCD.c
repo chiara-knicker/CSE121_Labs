@@ -3,7 +3,6 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <driver/i2c.h>
@@ -19,24 +18,27 @@ const uint8_t color_define[4][3] =
     {0, 0, 255},                // blue
 };
 
-
 void init()
 {
 	esp_err_t err = i2c_master_init(); //Wire.begin();
 	_showfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 	begin(_cols, _rows);
+
+	if (err != ESP_OK) {
+	  printf("Failed to i2c_param_config %d", err);
+  	}
 }
 
 void clear()
 {
     command(LCD_CLEARDISPLAY);        // clear display, set cursor position to zero
-    vTaskDelay(pdMS_TO_TICKS(2)); //delayMicroseconds(2000);          // this command takes a long time!
+    vTaskDelay(pdMS_TO_TICKS(2));     // this command takes a long time!
 }
 
 void home()
 {
     command(LCD_RETURNHOME);        // set cursor position to zero
-    vTaskDelay(pdMS_TO_TICKS(2)); //delayMicroseconds(2000);        // this command takes a long time!
+    vTaskDelay(pdMS_TO_TICKS(2));   // this command takes a long time!
 }
 
 void noDisplay()
@@ -108,10 +110,8 @@ void autoscroll(void)
 
 void customSymbol(uint8_t location, uint8_t charmap[])
 {
-
     location &= 0x7; // we only have 8 locations 0-7
     command(LCD_SETCGRAMADDR | (location << 3));
-    
     
     uint8_t data[9];
     data[0] = 0x40;
@@ -124,12 +124,10 @@ void customSymbol(uint8_t location, uint8_t charmap[])
 
 void setCursor(uint8_t col, uint8_t row)
 {
-
     col = (row == 0 ? col|0x80 : col|0xc0);
     uint8_t data[3] = {0x80, col};
 
     send(data, 2);
-
 }
 
 void setRGB(uint8_t r, uint8_t g, uint8_t b)
@@ -172,43 +170,49 @@ inline void command(uint8_t value)
     send(data, 2);
 }
 
-void blink_on(){
+void blink_on()
+{
 	blink();
 }
 
-void blink_off(){
+void blink_off()
+{
 	stopBlink();
 }
 
-void cursor_on(){
+void cursor_on()
+{
 	cursor();
 }
 
-void cursor_off(){
+void cursor_off()
+{
 	noCursor();
 }
 
-void setBacklight(uint8_t new_val){
+void setBacklight(uint8_t new_val)
+{
 	if(new_val){
 		blinkLED();		// turn backlight on
 	}else{
-		noBlinkLED();		// turn backlight off
+		noBlinkLED();	// turn backlight off
 	}
 }
 
-void load_custom_character(uint8_t char_num, uint8_t *rows){
-		customSymbol(char_num, rows);
+void load_custom_character(uint8_t char_num, uint8_t *rows)
+{
+	customSymbol(char_num, rows);
 }
 
-void print(const char c[]) {
-  while (*c) {
-      write(*c++);
-  }
+void print(const char c[])
+{
+	while (*c) {
+      	write(*c++);
+  	}
 }
 
-void printstr(const char c[]){
-	///< This function is not identical to the function used for "real" I2C displays
-	///< it's here so the user sketch doesn't have to be changed 
+void printstr(const char c[])
+{
 	print(c);
 }
 
@@ -231,23 +235,18 @@ void begin(uint8_t cols, uint8_t lines, uint8_t dotsize)
     ///< before sending commands. Arduino can turn on way befer 4.5V so we'll wait 50
     vTaskDelay(pdMS_TO_TICKS(50)); //delay(50);
 
-
-    ///< this is according to the hitachi HD44780 datasheet
-    ///< page 45 figure 23
+    ///< this is according to the hitachi HD44780 datasheet (page 45 figure 23)
 
     ///< Send function set command sequence
     command(LCD_FUNCTIONSET | _showfunction);
     vTaskDelay(pdMS_TO_TICKS(5)); //delay(5);  // wait more than 4.1ms
 	
-	///< second try
+    ///< second try
     command(LCD_FUNCTIONSET | _showfunction);
     vTaskDelay(pdMS_TO_TICKS(5)); //delay(5);
 
     ///< third go
     command(LCD_FUNCTIONSET | _showfunction);
-
-
-
 
     ///< turn the display on with no cursor or blinking default
     _showcontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
@@ -261,7 +260,6 @@ void begin(uint8_t cols, uint8_t lines, uint8_t dotsize)
     ///< set the entry mode
     command(LCD_ENTRYMODESET | _showmode);
     
-    
     ///< backlight init
     setReg(REG_MODE1, 0);
     ///< set LEDs controllable by both PWM and GRPPWM registers
@@ -271,47 +269,33 @@ void begin(uint8_t cols, uint8_t lines, uint8_t dotsize)
     setReg(REG_MODE2, 0x20);
     
     setColorWhite();
-
 }
 
 void send(uint8_t *data, uint8_t len)
 {
-    //Wire.beginTransmission(_lcdAddr);        // transmit to device #4
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, _lcdAddr, true);
 
     for(int i=0; i<len; i++) {
-        i2c_master_write_byte(cmd, data[i], true); //Wire.write(data[i]);
+        i2c_master_write_byte(cmd, data[i], true);
 	  vTaskDelay(pdMS_TO_TICKS(5)); //delay(5);
     }
     i2c_master_stop(cmd);
-    esp_err_t err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(100)); //Wire.endTransmission();
+    esp_err_t err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(100));
     i2c_cmd_link_delete(cmd);
 }
 
 void setReg(uint8_t addr, uint8_t data)
 {
-    //Wire.beginTransmission(_RGBAddr); // transmit to device #4
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, _RGBAddr, true);
 
-    i2c_master_write_byte(cmd, addr, true); //Wire.write(addr);
-    i2c_master_write_byte(cmd, data, true); //Wire.write(data);
+    i2c_master_write_byte(cmd, addr, true);
+    i2c_master_write_byte(cmd, data, true);
 
     i2c_master_stop(cmd);
-    esp_err_t err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(100)); //Wire.endTransmission();
+    esp_err_t err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(100));
     i2c_cmd_link_delete(cmd);
 }
-
-/************************unsupported API functions***************************/
-void off(){}
-void on(){}
-void setDelay (int cmdDelay,int charDelay) {}
-uint8_t status(){return 0;}
-uint8_t keypad (){return 0;}
-uint8_t init_bargraph(uint8_t graphtype){return 0;}
-void draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end){}
-void draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_row_end){}
-void setContrast(uint8_t new_val){}
