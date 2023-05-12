@@ -123,6 +123,9 @@ https://github.com/espressif/esp-idf/blob/17451f1fb3d6485af5113d96b6836a7ce60efe
 DFRobot GitHub <br>
 https://github.com/DFRobotdl/DFRobot_LCD
 
+Wire library <br>
+https://github.com/espressif/arduino-esp32/tree/master/libraries/Wire
+
 DFR0554 Datasheet <br>
 https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/DFR0554_Web.pdf
 
