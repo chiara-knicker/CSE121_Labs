@@ -51,7 +51,7 @@
 
 static uint16_t hid_conn_id = 0;
 static bool sec_conn = false;
-static bool send_volum_up = false;
+
 #define CHAR_DECLARATION_SIZE   (sizeof(uint8_t))
 
 static void hidd_event_callback(esp_hidd_cb_event_t event, esp_hidd_cb_param_t *param);
@@ -169,12 +169,10 @@ void hid_demo_task(void *pvParameters)
 {
     vTaskDelay(pdMS_TO_TICKS(1000));
     while(1) {
-        vTaskDelay(pdMS_TO_TICKS(2000));
         if (sec_conn) {
             ESP_LOGI(HID_DEMO_TAG, "Send mouse values");
-            //send_volum_up = true;
 	    // mouse values
-	    uint8_t move_x = 500;
+	    uint8_t move_x = 50;
 	    uint8_t move_y = 0;
 	    uint8_t button = 0;
 	    // send mouse values
