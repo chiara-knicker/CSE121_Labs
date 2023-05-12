@@ -148,12 +148,13 @@ void setCursor(uint8_t, uint8_t);
 /*
  *  @brief color control
  */
-  
+
+void setReg(uint8_t addr, uint8_t data);
 void setRGB(uint8_t r, uint8_t g, uint8_t b);               // set rgb
-void setPWM(uint8_t color, uint8_t pwm){setReg(color, pwm);}      // set pwm 
+void setPWM(uint8_t color, uint8_t pwm);      // set pwm 
 void setColor(uint8_t color);
-void setColorAll(){setRGB(0, 0, 0);}
-void setColorWhite(){setRGB(255, 255, 255);}
+void setColorAll();
+void setColorWhite();
 
 /*
  *  @brief blink the LED backlight
@@ -188,19 +189,7 @@ void printstr(const char[]);
   
 void print(const char c[]);
   
-void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
+void begin(uint8_t cols, uint8_t rows, uint8_t charsize);
 void send(uint8_t *data, uint8_t len);
-void setReg(uint8_t addr, uint8_t data);
-
-uint8_t _showfunction;
-uint8_t _showcontrol;
-uint8_t _showmode;
-uint8_t _initialized;
-uint8_t _numlines,_currline;
-uint8_t _lcdAddr = LCD_ADDRESS;
-uint8_t _RGBAddr = RGB_ADDRESS;
-uint8_t _cols = 16;
-uint8_t _rows = 2;
-uint8_t _backlightval;
 
 #endif

@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
@@ -8,6 +7,7 @@
 #include <driver/i2c.h>
 #include "esp_log.h"
 
+#include "i2c_api.h"
 #include "DFRobot_LCD.h"
 
 const uint8_t color_define[4][3] = 
@@ -18,11 +18,22 @@ const uint8_t color_define[4][3] =
     {0, 0, 255},                // blue
 };
 
+uint8_t _showfunction;
+uint8_t _showcontrol;
+uint8_t _showmode;
+uint8_t _initialized;
+uint8_t _numlines,_currline;
+uint8_t _lcdAddr = LCD_ADDRESS;
+uint8_t _RGBAddr = RGB_ADDRESS;
+uint8_t _cols = 16;
+uint8_t _rows = 2;
+uint8_t _backlightval;
+
 void init()
 {
 	esp_err_t err = i2c_master_init(); //Wire.begin();
 	_showfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
-	begin(_cols, _rows);
+	begin(_cols, _rows, LCD_5x8DOTS);
 
 	if (err != ESP_OK) {
 	  printf("Failed to i2c_param_config %d", err);
@@ -137,11 +148,25 @@ void setRGB(uint8_t r, uint8_t g, uint8_t b)
     setReg(REG_BLUE, b);
 }
 
+void setPWM(uint8_t color, uint8_t pwm)
+{
+    setReg(color, pwm);
+}
 
 void setColor(uint8_t color)
 {
     if(color > 3)return ;
     setRGB(color_define[color][0], color_define[color][1], color_define[color][2]);
+}
+
+void setColorAll()
+{
+    setRGB(0, 0, 0);
+}
+
+void setColorWhite()
+{
+    setRGB(255, 255, 255);
 }
 
 void blinkLED(void)
@@ -275,27 +300,38 @@ void send(uint8_t *data, uint8_t len)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, _lcdAddr, true);
+    i2c_master_write_byte(cmd, (_lcdAddr << 1) | I2C_MASTER_WRITE, true);
 
     for(int i=0; i<len; i++) {
         i2c_master_write_byte(cmd, data[i], true);
-	  vTaskDelay(pdMS_TO_TICKS(5)); //delay(5);
+	vTaskDelay(pdMS_TO_TICKS(5)); //delay(5);
     }
+
     i2c_master_stop(cmd);
     esp_err_t err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(100));
     i2c_cmd_link_delete(cmd);
+
+    if (err != ESP_OK) {
+	  printf("Failed to send data %d\n", err);
+    }
 }
 
 void setReg(uint8_t addr, uint8_t data)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, _RGBAddr, true);
+    i2c_master_write_byte(cmd, (_RGBAddr << 1) | I2C_MASTER_WRITE, true);
 
+    //i2c_master_write_byte(cmd, 0b10000000, true); // Control Byte
     i2c_master_write_byte(cmd, addr, true);
+    //i2c_master_write_byte(cmd, 0b00000000, true); // Control Byte
     i2c_master_write_byte(cmd, data, true);
 
     i2c_master_stop(cmd);
     esp_err_t err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(100));
     i2c_cmd_link_delete(cmd);
+
+    if (err != ESP_OK) {
+	  printf("Failed to setReg %d\n", err);
+    }
 }

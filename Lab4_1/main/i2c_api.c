@@ -45,13 +45,14 @@ void i2c_write_shtc3(uint16_t command)
     i2c_master_write_byte(cmd, command & 0xFF, true);
     i2c_master_stop(cmd);
     esp_err_t err = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
-    i2c_cmd_link_delete(cmd);
 
     if(err != ESP_OK){
         ESP_LOGE(TAG, "Failed to 1st write %d", err);
     }
 
     vTaskDelay(pdMS_TO_TICKS(20));
+
+    i2c_cmd_link_delete(cmd);
 }
 
 void i2c_read_shtc3(uint8_t *data, size_t size)
