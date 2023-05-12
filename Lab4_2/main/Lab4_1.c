@@ -25,13 +25,24 @@ void shtc3_task(){
 	float temp = calculate_temp(raw_temp);
 	float temp_f = calculate_temp_f(raw_temp);
         
-	printf("Temperature is %.2fC (or %.2fF) with a %.2f %%  humidity\n", temp, temp_f, humidity);
-        
+	printf("Temperature is %.2fC (or %.2fF) with a %.2f%%  humidity\n", temp, temp_f, humidity);
+       
 	setRGB(0, 255, 0);
+	
+	char buf[10];
+	const char* val_str = buf;
+
 	setCursor(0,0);
-	print("Hello CSE121!");
+	sprintf(buf, "%.2f", temp);
+	print("Temp: ");
+	print(val_str);
+	print("C");
+
 	setCursor(0,1);
-	print("Chiara");
+	sprintf(buf, "%.2f", humidity);
+	print("Hum : ");
+	print(val_str);
+	print("%");
 
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
