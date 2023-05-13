@@ -1,5 +1,9 @@
 # Lab 3.3
 
+This lab is using the ble_hid_device_demo example from the esp-idf GitHub repository.
+
+https://github.com/espressif/esp-idf/tree/17451f1fb3d6485af5113d96b6836a7ce60efee8/examples/bluetooth/bluedroid/ble/ble_hid_device_demo
+
 ## File descriptions
 
 * `ble_mouse_main.c`
