@@ -131,3 +131,7 @@ https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/DFR0554_Web.pdf
 
 DFR0554 Datasheet <br>
 https://github.com/Arduinolibrary/DFRobot_Gravity_I2C_LCD1602_Display_module/raw/master/DFR0554%20Datasheet.pdf
+
+## Lab 5
+Wifi example <br>
+https://github.com/espressif/esp-idf/tree/17451f1fb3d6485af5113d96b6836a7ce60efee8/examples/wifi/getting_started/station
