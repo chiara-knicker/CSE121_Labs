@@ -161,7 +161,7 @@ void hid_demo_task(void *pvParameters)
     }
 }
 ```
-This is the task for moving the mouse, which runs continuously in a loop. It waits for a secure connection to be established with the HID device (as indicated by the sec_conn variable being set to true), and then sends simulated mouse values to the device every 5 seconds using the esp_hidd_send_mouse_value function.
+This is the task for moving the mouse, which runs continuously in a loop. It waits for a secure connection to be established with the HID device (as indicated by the sec_conn variable being set to true), and then sends simulated mouse values to the device every 5 seconds using the `esp_hidd_send_mouse_value` function.
 
 The mouse values are represented by three variables: move_x, move_y, and button. move_x and move_y indicate the amount of movement in the X and Y directions of the mouse, respectively, while button indicates which mouse button is being pressed. In this case, the mouse is set to move 50 pixels to the right (move_x is set to 50), with no movement in the Y direction (move_y is set to 0), and no mouse button being pressed (button is set to 0).
 
