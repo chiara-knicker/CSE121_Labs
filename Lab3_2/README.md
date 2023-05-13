@@ -68,27 +68,27 @@ static esp_ble_adv_data_t hidd_adv_data = {
     .flag = 0x6,
 };
 ```
-This code is defining a static instance of the esp_ble_adv_data_t struct, which is used to configure the advertising data for a Bluetooth Low Energy (BLE) device.
+This defines a static instance of the esp_ble_adv_data_t struct, which is used to configure the advertising data for a Bluetooth Low Energy (BLE) device.
 
-* `set_scan_rsp`: A boolean value indicating whether the advertising data should be sent as a response to a scan request from a central device. In this case, it's set to false, meaning that the device will send the advertising data without being prompted by a scan request.
+* `set_scan_rsp`: Boolean value indicating whether the advertising data should be sent as a response to a scan request from a central device. It is set to false, meaning that the device will send the advertising data without being prompted by a scan request.
 
-* `include_name`: A boolean value indicating whether the device name should be included in the advertising data. In this case, it's set to true, meaning that the device name will be included.
+* `include_name`: Boolean value indicating whether the device name should be included in the advertising data. It's set to true, meaning that the device name will be included.
 
-* `include_txpower`: A boolean value indicating whether the transmit power level should be included in the advertising data. In this case, it's set to true, meaning that the transmit power level will be included.
+* `include_txpower`: Boolean value indicating whether the transmit power level should be included in the advertising data. It's set to true, meaning that the transmit power level will be included.
 
-* `min_interval`: The minimum advertising interval in units of 1.25 milliseconds. In this case, it's set to 6, meaning that the device will advertise at a minimum interval of 7.5 milliseconds.
+* `min_interval`: Minimum advertising interval in units of 1.25 milliseconds. It's set to 6, meaning that the device will advertise at a minimum interval of 7.5 milliseconds.
 
-* `max_interval`: The maximum advertising interval in units of 1.25 milliseconds. In this case, it's set to 16, meaning that the device will advertise at a maximum interval of 20 milliseconds.
+* `max_interval`: Maximum advertising interval in units of 1.25 milliseconds. It's set to 16, meaning that the device will advertise at a maximum interval of 20 milliseconds.
 
-* `appearance`: The appearance value of the device. This is used to indicate the general category of the device, such as a mouse or a keyboard. In this case, it's set to 0x03c0, which corresponds to "HID Generic".
+* `appearance`: Appearance value of the device used to indicate the general category of the device, such as a mouse or a keyboard. It's set to 0x03c0, which corresponds to "HID Generic".
 
-* `manufacturer_len and p_manufacturer_data`: The length and data of the manufacturer-specific data to be included in the advertising data. In this case, there is no manufacturer-specific data included, so the length is set to 0 and the data pointer is set to NULL.
+* `manufacturer_len` and `p_manufacturer_data`: Length and data of the manufacturer-specific data to be included in the advertising data. There is no manufacturer-specific data included, so the length is set to 0 and the data pointer is set to NULL.
 
-* `service_data_len and p_service_data`: The length and data of the service-specific data to be included in the advertising data. In this case, there is no service-specific data included, so the length is set to 0 and the data pointer is set to NULL.
+* `service_data_len` and `p_service_data`: Length and data of the service-specific data to be included in the advertising data. There is no service-specific data included, so the length is set to 0 and the data pointer is set to NULL.
 
-* `service_uuid_len and p_service_uuid`: The length and data of the service UUID to be included in the advertising data. In this case, the length is set to the size of the hidd_service_uuid128 array (which presumably contains the UUID for a HID service), and the data pointer is set to point to that array.
+* `service_uuid_len` and `p_service_uuid`: Length and data of the service UUID to be included in the advertising data. The length is set to the size of the hidd_service_uuid128 array, which contains the UUID for the HID service, and the data pointer is set to point to that array.
 
-* `flag`: The advertising flags to be included in the advertising data. In this case, it's set to 0x6, which corresponds to "LE General Discoverable Mode" and "BR/EDR Not Supported".
+* `flag`: Advertising flags to be included in the advertising data. It's set to 0x6, which corresponds to "LE General Discoverable Mode" and "BR/EDR Not Supported".
 
 ```
 static esp_ble_adv_params_t hidd_adv_params = {
@@ -102,19 +102,19 @@ static esp_ble_adv_params_t hidd_adv_params = {
     .adv_filter_policy = ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY,
 };
 ```
-This code is defining a structure called hidd_adv_params of type esp_ble_adv_params_t which contains the parameters for advertising as a BLE device. Here is a breakdown of each parameter:
+This code is defining a structure called hidd_adv_params of type esp_ble_adv_params_t which contains the parameters for advertising as a BLE device.
 
-* `adv_int_min`: This sets the minimum advertising interval between 2 advertisements. The value is 0x20, which is equivalent to 32 in decimal. The value is in units of 0.625 milliseconds, so the advertising interval is 32 x 0.625 = 20 milliseconds.
+* `adv_int_min`: Minimum advertising interval in units of 0.625 milliseconds. It's set to 0x20, meaning that the device will advertise at a minimum interval of 20 milliseconds.
 
-* `adv_int_max`: This sets the maximum advertising interval between 2 advertisements. The value is 0x30, which is equivalent to 48 in decimal. Again, the value is in units of 0.625 milliseconds, so the advertising interval is 48 x 0.625 = 30 milliseconds.
+* `adv_int_max`: Maximum advertising interval in units of 0.625 milliseconds. It's set to 0x30, meaning that the device will advertise at a maximum interval of 30 milliseconds.
 
-* `adv_type`: This specifies the type of advertising to be used. In this case, ADV_TYPE_IND is used, which is an indirect advertising type. This means that the device will send advertisements to a device that is listening, but will not wait for a response from the device it is advertising to.
+* `adv_type`: Type of advertising to be used. It's set to ADV_TYPE_IND, which is an indirect advertising type. This means that the device will send advertisements to a device that is listening, but will not wait for a response from the device it is advertising to.
 
-* `own_addr_type`: This specifies the type of address to be used for advertising. In this case, BLE_ADDR_TYPE_PUBLIC is used, which means that the device will use a public address for advertising. Other types of addresses that can be used include static random and private resolvable addresses.
+* `own_addr_type`: Type of address to be used for advertising. It's set to BLE_ADDR_TYPE_PUBLIC, which means that the device will use a public address for advertising.
 
-* `channel_map`: This parameter specifies which advertising channels to use. The value ADV_CHNL_ALL means that all three advertising channels will be used for advertising. There are three advertising channels in BLE: 37, 38, and 39.
+* `channel_map`: Advertising channels to use. It's set to ADV_CHNL_ALL, which means that all three advertising channels will be used for advertising. There are three advertising channels in BLE: 37, 38, and 39.
 
-* `adv_filter_policy`: This parameter specifies the advertising filter policy. In this case, ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY is used, which means that the device will allow connections from any device and will also allow scanning from any device. Other options include allowing connections from a whitelist of devices or only allowing connections from devices that have previously connected to the device.
+* `adv_filter_policy`: Advertising filter policy. It's set to ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY, which means that the device will allow connections from any device and will also allow scanning from any device.
 
 ```
 static void hidd_event_callback(esp_hidd_cb_event_t event, esp_hidd_cb_param_t *param)
@@ -123,19 +123,19 @@ This is a callback function that will be invoked by the ESP-HIDD (Human Interfac
 
 The function uses a switch statement to handle different types of events.
 
-* `ESP_HIDD_EVENT_REG_FINISH`: This event is triggered when the ESP-HIDD library finishes initializing. If the initialization was successful, the function sets the device name and advertising data.
+* `ESP_HIDD_EVENT_REG_FINISH`: Triggered when the ESP-HIDD library finishes initializing. If the initialization was successful, the function sets the device name and advertising data.
 
-* `ESP_BAT_EVENT_REG`: This event is not used in this code.
+* `ESP_BAT_EVENT_REG`: The code does nothing in response to this event.
 
-* `ESP_HIDD_EVENT_DEINIT_FINISH`: This event is triggered when the ESP-HIDD library finishes deinitializing. The code does nothing in response to this event.
+* `ESP_HIDD_EVENT_DEINIT_FINISH`: Triggered when the ESP-HIDD library finishes deinitializing. The code does nothing in response to this event.
 
-* `ESP_HIDD_EVENT_BLE_CONNECT`: This event is triggered when a Bluetooth Low Energy (BLE) device connects to the HID device. The code stores the connection ID (`hid_conn_id`) for later use.
+* `ESP_HIDD_EVENT_BLE_CONNECT`: Triggered when a Bluetooth Low Energy (BLE) device connects to the HID device. The code stores the connection ID (`hid_conn_id`) for later use.
 
-* `ESP_HIDD_EVENT_BLE_DISCONNECT`: This event is triggered when a BLE device disconnects from the HID device. The code sets a flag (`sec_conn`) to false and restarts advertising.
+* `ESP_HIDD_EVENT_BLE_DISCONNECT`: Triggered when a BLE device disconnects from the HID device. The code sets a flag (`sec_conn`) to false and restarts advertising.
 
-* `ESP_HIDD_EVENT_BLE_VENDOR_REPORT_WRITE_EVT`: This event is triggered when a vendor-specific report is received over BLE. The code logs the data to the console.
+* `ESP_HIDD_EVENT_BLE_VENDOR_REPORT_WRITE_EVT`: Triggered when a vendor-specific report is received over BLE. The code logs the data to the console.
 
-* `ESP_HIDD_EVENT_BLE_LED_REPORT_WRITE_EVT`: This event is triggered when an LED report is received over BLE. The code logs the data to the console.
+* `ESP_HIDD_EVENT_BLE_LED_REPORT_WRITE_EVT`: Triggered when an LED report is received over BLE. The code logs the data to the console.
 
 Overall, the `hidd_event_callback` function serves as a way for the application to respond to various events that occur during HID operation. It sets the device name and advertising data when the HID device is initialized, and it responds to various events such as BLE connections and disconnections, as well as receiving data from BLE devices.
 
@@ -146,11 +146,11 @@ This defines the GAP (Generic Access Profile) event handler function that handle
 
 The function uses a switch statement to handle different types of events:
 
-* `ESP_GAP_BLE_ADV_DATA_SET_COMPLETE_EVT`: This event is triggered when the advertising data has been set. The function starts advertising with the configured parameters (`hidd_adv_params`) using the `esp_ble_gap_start_advertising()` function.
+* `ESP_GAP_BLE_ADV_DATA_SET_COMPLETE_EVT`: Triggered when the advertising data has been set. The function starts advertising with the configured parameters (`hidd_adv_params`) using the `esp_ble_gap_start_advertising()` function.
 
-* `ESP_GAP_BLE_SEC_REQ_EVT`: This event is triggered when a security request is received. The function logs the BD_ADDR (Bluetooth device address) of the requesting device using `ESP_LOGD()`, and then sends a security response to accept the request using `esp_ble_gap_security_rsp()`.
+* `ESP_GAP_BLE_SEC_REQ_EVT`: Triggered when a security request is received. The function logs the BD_ADDR (Bluetooth device address) of the requesting device using `ESP_LOGD()`, and then sends a security response to accept the request using `esp_ble_gap_security_rsp()`.
 
-* `ESP_GAP_BLE_AUTH_CMPL_EVT`: This event is triggered when an authentication procedure has completed. The function logs the BD_ADDR and address type of the remote device, and whether the authentication was successful (`success` field). If authentication failed, it logs the reason (`fail_reason` field).
+* `ESP_GAP_BLE_AUTH_CMPL_EVT`: Triggered when an authentication procedure has completed. The function logs the BD_ADDR and address type of the remote device, and whether the authentication was successful (`success` field). If authentication failed, it logs the reason (`fail_reason` field).
 
 
 ```
