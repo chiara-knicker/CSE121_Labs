@@ -196,119 +196,6 @@ This is the entry point of the application and is responsible for initializing a
 
 12. `xTaskCreate(&hid_demo_task, "hid_task", 2048, NULL, 5, NULL)`: Creates a new task named `hid_task` and assigns it the `hid_demo_task()` function to execute. This function is responsible for sending mouse values over the Bluetooth connection. The task has a stack size of 2048 bytes and a priority of 5.
 
-## hid_dev.h
-
-This header file defines various constants and types related to HID (Human Interface Device) functionality.
-
-```
-/* HID Report type */
-#define HID_TYPE_INPUT       1
-#define HID_TYPE_OUTPUT      2
-#define HID_TYPE_FEATURE     3
-```
-`HID_TYPE_INPUT`, `HID_TYPE_OUTPUT`, and `HID_TYPE_FEATURE` represent the different types of HID reports that can be sent and received.
-
-```
-// HID Keyboard/Keypad Usage IDs (subset of the codes available in the USB HID Usage Tables spec)
-#define HID_KEY_RESERVED       0    // No event inidicated
-#define HID_KEY_A              4    // Keyboard a and A
-#define HID_KEY_B              5    // Keyboard b and B
-#define HID_KEY_C              6    // Keyboard c and C
-...
-typedef uint8_t keyboard_cmd_t;
-```
-```
-// HID Mouse Usage IDs
-#define HID_MOUSE_LEFT       253
-#define HID_MOUSE_MIDDLE     254
-#define HID_MOUSE_RIGHT      255
-typedef uint8_t mouse_cmd_t;
-```
-```
-// HID Consumer Usage IDs (subset of the codes available in the USB HID Usage Tables spec)
-#define HID_CONSUMER_POWER          48  // Power
-#define HID_CONSUMER_RESET          49  // Reset
-#define HID_CONSUMER_SLEEP          50  // Sleep
-...
-typedef uint8_t consumer_cmd_t;
-```
-This defines various HID usage IDs for various keyboard keys, mouse buttons, and consumer control codes. These are used to indicate which key or button is being pressed, or which consumer control function is being activated. For example, the `HID_KEY_A`, `HID_KEY_B`, and `HID_KEY_C` constants are used to specify the letter keys on a keyboard, while the `HID_MOUSE_LEFT`, `HID_MOUSE_MIDDLE`, and `HID_MOUSE_RIGHT` constants are used to specify the left, middle, and right mouse buttons. Consumer control usage IDs are defined for common multimedia functions such as play, pause, and volume control.
-
-It also defines various types of commands for different types of HID devices, such as `keyboard_cmd_t` for keyboards, `mouse_cmd_t` for mice, and `consumer_cmd_t` for consumer control devices.
-
-```
-// HID Consumer Control report bitmasks
-#define HID_CC_RPT_NUMERIC_BITS         0xF0
-#define HID_CC_RPT_CHANNEL_BITS         0xCF
-#define HID_CC_RPT_VOLUME_BITS          0x3F
-#define HID_CC_RPT_BUTTON_BITS          0xF0
-#define HID_CC_RPT_SELECTION_BITS       0xCF
-
-// Macros for the HID Consumer Control 2-byte report
-#define HID_CC_RPT_SET_NUMERIC(s, x)    (s)[0] &= HID_CC_RPT_NUMERIC_BITS;   \
-                                        (s)[0] = (x)
-#define HID_CC_RPT_SET_CHANNEL(s, x)    (s)[0] &= HID_CC_RPT_CHANNEL_BITS;   \
-                                        (s)[0] |= ((x) & 0x03) << 4
-#define HID_CC_RPT_SET_VOLUME_UP(s)     (s)[0] &= HID_CC_RPT_VOLUME_BITS;    \
-                                        (s)[0] |= 0x40
-#define HID_CC_RPT_SET_VOLUME_DOWN(s)   (s)[0] &= HID_CC_RPT_VOLUME_BITS;    \
-                                        (s)[0] |= 0x80
-#define HID_CC_RPT_SET_BUTTON(s, x)     (s)[1] &= HID_CC_RPT_BUTTON_BITS;    \
-                                        (s)[1] |= (x)
-#define HID_CC_RPT_SET_SELECTION(s, x)  (s)[1] &= HID_CC_RPT_SELECTION_BITS; \
-                                        (s)[1] |= ((x) & 0x03) << 4
-```
-This defines macros for manipulating HID Consumer Control 2-byte report, which is used for sending commands to a device that supports the HID (Human Interface Device) Consumer Control Usage Page.
-
-The first set of lines defines bitmasks for each of the fields in the HID Consumer Control report, which are used to clear the relevant bits in the report before setting the new values.
-
-The macros below are used to set the values of various fields in the HID Consumer Control report. They take a pointer to a buffer containing the 2-byte report, and modify the relevant bits in the buffer to set the desired value.
-
-* `HID_CC_RPT_SET_NUMERIC`: Sets the numeric value of the report. The macro clears the upper 4 bits (0xF0) of the first byte of the report, and sets them to the specified value x.
-
-* `HID_CC_RPT_SET_CHANNEL`: Sets the channel value of the report. The macro clears the upper 2 bits (0xCF) of the first byte of the report, and sets them to the specified value x shifted left by 4 bits.
-
-* `HID_CC_RPT_SET_VOLUME_UP`: Sets the Volume Up button value of the report. The macro clears the upper 2 bits (0x3F) of the first byte of the report, and sets the 7th bit (0x40) to indicate that the Volume Up button is pressed.
-
-* `HID_CC_RPT_SET_VOLUME_DOWN`: Sets the Volume Down button value of the report. The macro clears the upper 2 bits (0x3F) of the first byte of the report, and sets the 8th bit (0x80) to indicate that the Volume Down button is pressed.
-
-* `HID_CC_RPT_SET_BUTTON`: Sets the value of a button in the report. The macro clears the upper 4 bits (0xF0) of the second byte of the report, and sets them to the specified value x.
-
-* `HID_CC_RPT_SET_SELECTION`: Sets the value of a selection in the report. The macro clears the upper 2 bits (0xCF) of the second byte of the report, and sets them to the specified value x shifted left by 4 bits.
-
-Setting various bits in the report indicate the state of different buttons or controls on the consumer control device.
-
-```
-// HID report mapping table
-typedef struct
-{
-  uint16_t    handle;           // Handle of report characteristic
-  uint16_t    cccdHandle;       // Handle of CCCD for report characteristic
-  uint8_t     id;               // Report ID
-  uint8_t     type;             // Report type
-  uint8_t     mode;             // Protocol mode (report or boot)
-} hid_report_map_t;
-```
-This is a structure definition for the HID report mapping table, which contains information about the characteristics of an HID report. Here's what each field means:
-
-* `handle`: In Bluetooth, a "handle" is a unique identifier for a characteristic or descriptor.
-* `cccdHandle`: Client Characteristic Configuration Descriptor (CCCD) is used to enable or disable notifications or indications for the characteristic.
-* `id`: This is a unique identifier for the report, which is used to distinguish between multiple reports of the same type.
-* `type`: This specifies whether the report is an input report, an output report, or a feature report.
-* `mode`: This specifies whether the report is using the HID report protocol or the HID boot protocol.
-```
-// HID dev configuration structure
-typedef struct
-{
-  uint32_t    idleTimeout;      // Idle timeout in milliseconds
-  uint8_t     hidFlags;         // HID feature flags
-} hid_dev_cfg_t;
-```
-This is a structure definition for the HID device configuration, which contains general configuration information for the HID device. Here's what each field means:
-
-* `idleTimeout`: This specifies the amount of time that the device can remain inactive before it goes into an idle state.
-* `hidFlags`: These flags are used to specify various HID features, such as whether the device supports wake-on-connect, remote wakeup, or the use of a boot protocol.
-
 ## hid_dev.c
 
 This code defines functions that are used for implementing HID (Human Interface Device) profile in ESP32C3.
@@ -320,3 +207,27 @@ This code defines functions that are used for implementing HID (Human Interface 
 * `hid_dev_send_report(esp_gatt_if_t gatts_if, uint16_t conn_id, uint8_t id, uint8_t type, uint8_t length, uint8_t *data)`: This function sends a HID report to the connected device over Bluetooth. It takes several arguments: gatts_if, the GATT interface to use for sending the report; conn_id, the connection ID of the device to send the report to; id and type, the ID and type of the report to send; length, the length of the report data; and data, a pointer to the report data. The function first calls hid_dev_rpt_by_id to find the report with the given id and type, and then uses the esp_ble_gatts_send_indicate function to send an indication of the report to the connected device.
 
 * `hid_consumer_build_report(uint8_t *buffer, consumer_cmd_t cmd)`: This function builds an HID consumer control report based on a given command (cmd) and stores the result in a buffer. The buffer must be large enough to hold the report. The function uses a series of macros (HID_CC_RPT_SET_CHANNEL, HID_CC_RPT_SET_VOLUME_UP, etc.) to set the appropriate values in the report buffer based on the command. If the given buffer is NULL, the function logs an error and returns without modifying the buffer.
+
+## esp_hidd_prf_api.c
+
+```
+void esp_hidd_send_mouse_value(uint16_t conn_id, uint8_t mouse_button, int8_t mickeys_x, int8_t mickeys_y)
+{
+    uint8_t buffer[HID_MOUSE_IN_RPT_LEN];
+
+    buffer[0] = mouse_button;   // Buttons
+    buffer[1] = mickeys_x;           // X
+    buffer[2] = mickeys_y;           // Y
+    buffer[3] = 0;           // Wheel
+    buffer[4] = 0;           // AC Pan
+
+    hid_dev_send_report(hidd_le_env.gatt_if, conn_id,
+                        HID_RPT_ID_MOUSE_IN, HID_REPORT_TYPE_INPUT, HID_MOUSE_IN_RPT_LEN, buffer);
+    return;
+}
+```
+This is the function that sends mouse input values over the HID (Human Interface Device) protocol. It takes four arguments: conn_id, which is the connection identifier for the device to which the input values are being sent; mouse_button, which is the state of the mouse buttons (left, right, or both) being pressed; mickeys_x, which is the relative position of the mouse in the x-axis; and mickeys_y, which is the relative position of the mouse in the y-axis.
+
+Inside the function, an array buffer is created with a length of HID_MOUSE_IN_RPT_LEN, which is the length of the HID input report for a mouse. The first element in the array is set to mouse_button, which is the state of the mouse buttons being pressed. The second and third elements in the array are set to mickeys_x and mickeys_y, which are the relative positions of the mouse in the x-axis and y-axis respectively. The fourth and fifth elements in the array are set to 0 as they represent the state of the mouse wheel and AC Pan, which are not relevant for this function.
+
+Finally, the hid_dev_send_report() function is called with the appropriate parameters to send the input report to the device with the given connection identifier.
