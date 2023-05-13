@@ -23,6 +23,16 @@ This file is the HID profile definition file, it include the main function of th
 It mainly includes how to create HID service. If you send and receive HID data and convert the data to keyboard keys,
 the mouse and consumer values are forwarded to the application.
 
+## Setup
+
+```
+cd Lab3_2
+```
+```
+idf.py menuconfig
+```
+This opens a configuration menu. Select Bluetooth and enable it. Building should now have more steps.
+
 ## ble_mouse_main.c
 
 ```
