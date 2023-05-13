@@ -15,7 +15,7 @@ Files containing api for i2c communication and reading the icm sensor (accelerom
 * `DFRobot_LCD.h` & `DFRobot_LCD.c`
 DFRobot_LCD repository code translated to C and compatible with the ESP32C3. Implements functionality to use LCD display.
 
-## `DFRobot_LCD.h` & `DFRobot_LCD.c`
+## DFRobot_LCD.h & DFRobot_LCD.c
 
 I replaced all occurrences of Wire with C code compatible with the ESPC3. For this, I looked at the Wire library to see what each function was doing so I could replace it correctly.
 
