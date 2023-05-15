@@ -291,7 +291,7 @@ static void http_get_task(void *pvParameters)
 // ------------- For HTTPS requests --------------
 
 static const char HOWSMYSSL_REQUEST[] = "GET " WEB_PATH " HTTP/1.1\r\n"
-                             "Host: "WEB_SERVER"\r\n"
+                             "Host: "WEB_SERVER":"WEB_PORT"\r\n"
                              "User-Agent: esp-idf/1.0 esp32\r\n"
                              "Accept: */*\r\n"
                              "\r\n";
