@@ -419,24 +419,6 @@ static void https_get_request_using_cacert_buf(void)
     https_get_request(cfg, WEB_URL, HOWSMYSSL_REQUEST);
 }
 
-static void https_get_request_using_specified_ciphersuites(void)
-{
-    ESP_LOGI(TAG, "https_request using server supported ciphersuites");
-    esp_tls_cfg_t cfg = {
-        .cacert_buf = (const unsigned char *) server_root_cert_pem_start,
-        .cacert_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
-        .ciphersuites_list = server_supported_ciphersuites,
-    };
-
-    https_get_request(cfg, WEB_URL, HOWSMYSSL_REQUEST);
-
-    ESP_LOGI(TAG, "https_request using server unsupported ciphersuites");
-
-    cfg.ciphersuites_list = server_unsupported_ciphersuites;
-
-    https_get_request(cfg, WEB_URL, HOWSMYSSL_REQUEST);
-}
-
 static void https_get_request_using_global_ca_store(void)
 {
     esp_err_t esp_ret = ESP_FAIL;
@@ -511,7 +493,6 @@ static void https_request_task(void *pvparameters)
     ESP_LOGI(TAG, "Minimum free heap size: %" PRIu32 " bytes", esp_get_minimum_free_heap_size());
     https_get_request_using_cacert_buf();
     https_get_request_using_global_ca_store();
-    https_get_request_using_specified_ciphersuites();
     ESP_LOGI(TAG, "Finish https_request example");
     vTaskDelete(NULL);
 }
