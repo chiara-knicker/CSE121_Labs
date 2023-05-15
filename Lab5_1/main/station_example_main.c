@@ -26,14 +26,14 @@
 #include "sdkconfig.h"
 
 // Additions for HTTPS requests
-#include <stdlib.h>
+/*#include <stdlib.h>
 #include <inttypes.h>
 #include <time.h>
 #include <sys/time.h>
 #include "esp_timer.h"
 #include "nvs.h"
 #include "esp_sntp.h"
-#include "esp_netif.h"
+#include "esp_netif.h"*/
 
 #include "esp_tls.h"
 #if CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
