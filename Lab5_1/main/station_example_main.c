@@ -42,10 +42,10 @@
 //#include "time_sync.h"
 
 /* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "https://www.wttr.in"
+#define WEB_SERVER "www.wttr.in"
 #define WEB_PORT "443" // 80 for HTTP
 // HTTPS
-#define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t/"
+#define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t"
 #define SERVER_URL_MAX_SZ 256
 // HTTP
 #define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
@@ -290,7 +290,7 @@ static void http_get_task(void *pvParameters)
 
 // ------------- For HTTPS requests --------------
 
-static const char HOWSMYSSL_REQUEST[] = "GET " WEB_PATH " HTTP/1.1\r\n"
+static const char HOWSMYSSL_REQUEST[] = "GET " WEB_URL " HTTP/1.1\r\n"
                              "Host: "WEB_SERVER"\r\n"
                              "User-Agent: esp-idf/1.0 esp32\r\n"
                              "Accept: */*\r\n"
