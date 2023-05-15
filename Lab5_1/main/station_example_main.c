@@ -293,6 +293,7 @@ static void http_get_task(void *pvParameters)
 static const char HOWSMYSSL_REQUEST[] = "GET " WEB_PATH " HTTP/1.1\r\n"
                              "Host: "WEB_SERVER"\r\n"
                              "User-Agent: esp-idf/1.0 esp32\r\n"
+                             "Accept: */*\r\n"
                              "\r\n";
 
 #ifdef CONFIG_EXAMPLE_CLIENT_SESSION_TICKETS
