@@ -19,13 +19,13 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-// For HTTP requests
+// Additions for HTTP requests
 #include "lwip/sockets.h"
 #include "lwip/netdb.h"
 #include "lwip/dns.h"
 #include "sdkconfig.h"
 
-// For HTTPS requests
+// Additions for HTTPS requests
 #include <stdlib.h>
 #include <inttypes.h>
 #include <time.h>
@@ -39,7 +39,7 @@
 #if CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
 #include "esp_crt_bundle.h"
 #endif
-#include "time_sync.h"
+//#include "time_sync.h"
 
 /* Constants that aren't configurable in menuconfig */
 #define WEB_SERVER "www.howsmyssl.com"
