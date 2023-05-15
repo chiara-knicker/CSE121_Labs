@@ -510,7 +510,7 @@ void app_main(void)
     wifi_init_sta();
     
     // HTTP request
-    xTaskCreate(&http_get_task, "http_get_task", 4096, NULL, 5, NULL);
+    //xTaskCreate(&http_get_task, "http_get_task", 4096, NULL, 5, NULL);
    
     // HTTPS request
     xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
