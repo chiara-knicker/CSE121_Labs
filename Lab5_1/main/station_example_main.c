@@ -45,7 +45,7 @@
 #define WEB_SERVER "www.wttr.in"
 #define WEB_PORT "443" // 80 for HTTP
 // HTTPS
-#define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t/"
+#define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t"
 #define SERVER_URL_MAX_SZ 256
 // HTTP
 #define WEB_PATH "/"
