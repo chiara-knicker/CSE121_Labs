@@ -20,7 +20,7 @@
 #include "lwip/sys.h"
 
 // For HTTP requests
-#include "protocol_examples_common.h"
+//#include "protocol_examples_common.h"
 
 #include "lwip/sockets.h"
 #include "lwip/netdb.h"
