@@ -43,34 +43,55 @@
 //#include "time_sync.h"
 
 /* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "www.wttr.in"
-#define WEB_PORT "443" // 80 for HTTP
+#define WEB_SERVER "chiara-raspberrypi.local"
+#define WEB_PORT "8000" // 443 for HTTPS, 80 for HTTP
 // HTTPS
 #define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t"
 #define SERVER_URL_MAX_SZ 256
 // HTTP
-#define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
+//#define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
+#define WEB_PATH "/"
 
 /* Timer interval once every day (24 Hours) */
 #define TIME_PERIOD (86400000000ULL)
+
+#define CONNECTION 2
 
 /* The examples use WiFi configuration that you can set via project configuration menu
 
    If you'd rather not, just change the below entries to strings with
    the config you want - ie #define EXAMPLE_WIFI_SSID "mywifissid"
 */
-//#define EXAMPLE_ESP_WIFI_SSID      CONFIG_ESP_WIFI_SSID
-//#define EXAMPLE_ESP_WIFI_PASS      CONFIG_ESP_WIFI_PASSWORD
-//#define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 
-//#define EXAMPLE_ESP_WIFI_SSID      "exampleWifi"
-//#define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
-//#define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
+#if CONNECTION == 0
+    // Configured wifi
+    #define EXAMPLE_ESP_WIFI_SSID      CONFIG_ESP_WIFI_SSID
+    #define EXAMPLE_ESP_WIFI_PASS      CONFIG_ESP_WIFI_PASSWORD
+    #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 
-#define EXAMPLE_ESP_WIFI_SSID      "eduroam"
-#define EXAMPLE_ESP_WIFI_USER	   "exampleEmail"
-#define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
-#define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
+#elif CONNECTION == 1
+    // Phone hotspot
+    #define EXAMPLE_ESP_WIFI_SSID      "exampleWifi"
+    #define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
+    #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
+
+#elif CONNECTION == 2
+    // Home wifi
+    #define EXAMPLE_ESP_WIFI_SSID      "exampleWifi"
+    #define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
+    #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
+
+#elif CONNECTION == 3
+    // Eduroam
+    #define EXAMPLE_ESP_WIFI_SSID      "eduroam"
+    #define EXAMPLE_ESP_WIFI_USER      "exampleEmail"
+    #define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
+    #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
+#endif
+
+#ifndef EXAMPLE_ESP_WIFI_USER
+#define EXAMPLE_ESP_WIFI_USER 	       "default"
+#endif
 
 #if CONFIG_ESP_WPA3_SAE_PWE_HUNT_AND_PECK
 #define ESP_WIFI_SAE_MODE WPA3_SAE_PWE_HUNT_AND_PECK
@@ -158,39 +179,48 @@ void wifi_init_sta(void)
     ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
                                                         IP_EVENT_STA_GOT_IP,
                                                         &event_handler,
-                                                        NULL,
-                                                        &instance_got_ip));
-    // Personal Hotspot
-    /*wifi_config_t wifi_config = {
-        .sta = {
-            .ssid = EXAMPLE_ESP_WIFI_SSID,
-            .password = EXAMPLE_ESP_WIFI_PASS,
-            .threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD,
-            .sae_pwe_h2e = ESP_WIFI_SAE_MODE,
-            .sae_h2e_identifier = EXAMPLE_H2E_IDENTIFIER,
-        },
-    };*/
+                                                        NULL,                                                    			&instance_got_ip));
 
-    // Eduroam
+ 
+    // Normal wifi
     wifi_config_t wifi_config = {
-        .sta = {
-            .ssid = EXAMPLE_ESP_WIFI_SSID,
-            .password = "exampleEmail:examplePassword",
-            .threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE,
-	    .pmf_cfg = {
-                .capable = true,
-                .required = false,
-            },
+	.sta = {
+		.ssid = EXAMPLE_ESP_WIFI_SSID,
+		.password = EXAMPLE_ESP_WIFI_PASS,
+		.threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD,
+           	.sae_pwe_h2e = ESP_WIFI_SAE_MODE,
+            	.sae_h2e_identifier = EXAMPLE_H2E_IDENTIFIER,
         },
     };
+    
+    // Eduroam 
+    if (CONNECTION == 3) {
+    	// Eduroam
+	/*//wifi_config.sta.password = "exampleEmail:examplePassword";
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE;
+        wifi_config.sta.pmf_cfg.capable = true;
+        wifi_config.sta.pmf_cfg.required = false;*/
+    	
+	wifi_config_t wifi_config = {
+            .sta = {
+            	.ssid = EXAMPLE_ESP_WIFI_SSID,
+            	.password = "exampleEmail:examplePassword",
+            	.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE,
+	    	.pmf_cfg = {
+                    .capable = true,
+                    .required = false,
+            	},
+            },
+    	};
 
-    // Enable EAP-PEAP authentication
-    esp_wifi_sta_wpa2_ent_enable();
+    	// Enable EAP-PEAP authentication
+    	esp_wifi_sta_wpa2_ent_enable();
 
-    // Set EAP identity
-    esp_wifi_sta_wpa2_ent_set_username((uint8_t *)EXAMPLE_ESP_WIFI_USER, strlen(EXAMPLE_ESP_WIFI_USER));
+    	// Set EAP identity
+    	esp_wifi_sta_wpa2_ent_set_username((uint8_t *)EXAMPLE_ESP_WIFI_USER, strlen(EXAMPLE_ESP_WIFI_USER));
 
-    esp_wifi_sta_wpa2_ent_set_password((uint8_t *)EXAMPLE_ESP_WIFI_PASS, strlen(EXAMPLE_ESP_WIFI_PASS));
+    	esp_wifi_sta_wpa2_ent_set_password((uint8_t *)EXAMPLE_ESP_WIFI_PASS, strlen(EXAMPLE_ESP_WIFI_PASS));
+    }
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
@@ -281,6 +311,106 @@ static void http_get_task(void *pvParameters)
         ESP_LOGI(TAG, "... socket send success");
 
         struct timeval receiving_timeout;
+        receiving_timeout.tv_sec = 5;
+        receiving_timeout.tv_usec = 0;
+        if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &receiving_timeout,
+                sizeof(receiving_timeout)) < 0) {
+            ESP_LOGE(TAG, "... failed to set socket receiving timeout");
+            close(s);
+            vTaskDelay(4000 / portTICK_PERIOD_MS);
+            continue;
+        }
+        ESP_LOGI(TAG, "... set socket receiving timeout success");
+
+        /* Read HTTP response */
+        do {
+            bzero(recv_buf, sizeof(recv_buf));
+            r = read(s, recv_buf, sizeof(recv_buf)-1);
+            for(int i = 0; i < r; i++) {
+                putchar(recv_buf[i]);
+            }
+        } while(r > 0);
+
+        ESP_LOGI(TAG, "... done reading from socket. Last read return=%d errno=%d.", r, errno);
+        close(s);
+        for(int countdown = 10; countdown >= 0; countdown--) {
+            ESP_LOGI(TAG, "%d... ", countdown);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        }
+        ESP_LOGI(TAG, "Starting again!");
+    }
+}
+
+static const char *REQUEST_POST = "POST " WEB_PATH " HTTP/1.0\r\n"
+    "Host: chiara-raspberrypi:"WEB_PORT"\r\n"
+    "User-Agent: esp-idf/1.0 esp32\r\n"
+    "Content-Type: text/plain; charset=utf-8\r\n"
+    "Content-Length: %d\r\n"
+    "\r\n"
+    "%s";
+
+static const char *POST_DATA = "Hello World";
+
+static void http_post_task(void *pvParameters)
+{
+    const struct addrinfo hints = {
+        .ai_family = AF_INET,
+        .ai_socktype = SOCK_STREAM,
+    };
+    struct addrinfo *res;
+    struct in_addr *addr;
+    int s, r;
+    char recv_buf[64];
+
+    while(1) {
+        int err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
+
+        if(err != 0 || res == NULL) {
+            ESP_LOGE(TAG, "DNS lookup failed err=%d res=%p", err, res);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            continue;
+        }
+
+        /* Code to print the resolved IP.
+
+           Note: inet_ntoa is non-reentrant, look at ipaddr_ntoa_r for "real" code */
+        addr = &((struct sockaddr_in *)res->ai_addr)->sin_addr;
+        ESP_LOGI(TAG, "DNS lookup succeeded. IP=%s", inet_ntoa(*addr));
+
+        s = socket(res->ai_family, res->ai_socktype, 0);
+        if(s < 0) {
+            ESP_LOGE(TAG, "... Failed to allocate socket.");
+            freeaddrinfo(res);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            continue;
+        }
+        ESP_LOGI(TAG, "... allocated socket");
+
+        if(connect(s, res->ai_addr, res->ai_addrlen) != 0) {
+            ESP_LOGE(TAG, "... socket connect failed errno=%d", errno);
+            close(s);
+            freeaddrinfo(res);
+            vTaskDelay(4000 / portTICK_PERIOD_MS);
+            continue;
+        }
+
+        ESP_LOGI(TAG, "... connected");
+        freeaddrinfo(res);
+
+	/* Prepare HTTP POST request */
+	int post_data_len = strlen(POST_DATA);
+	char post_request[strlen(REQUEST_POST) + post_data_len];
+	sprintf(post_request, REQUEST_POST, post_data_len, POST_DATA);
+
+	if (write(s, post_request, strlen(post_request)) < 0) {
+            ESP_LOGE(TAG, "... socket send failed");
+            close(s);
+            vTaskDelay(4000 / portTICK_PERIOD_MS);
+            continue;
+        }
+        ESP_LOGI(TAG, "... socket send success");
+
+	struct timeval receiving_timeout;
         receiving_timeout.tv_sec = 5;
         receiving_timeout.tv_usec = 0;
         if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &receiving_timeout,
@@ -532,9 +662,12 @@ void app_main(void)
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
     wifi_init_sta();
     
-    // HTTP request
+    // HTTP GET request
     //xTaskCreate(&http_get_task, "http_get_task", 4096, NULL, 5, NULL);
-   
+  
+    // HTTP POST request
+    xTaskCreate(&http_post_task, "http_post_task", 4096, NULL, 5, NULL);
+
     // HTTPS request
-    xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
+    //xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
 }
