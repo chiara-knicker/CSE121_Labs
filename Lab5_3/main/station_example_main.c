@@ -46,14 +46,18 @@
 #include "i2c_api.h"
 
 /* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "chiara-raspberrypi.local"
-#define WEB_PORT "1234"
+// get location and send data
+//#define WEB_SERVER "chiara-raspberrypi.local"
+//#define WEB_PORT "1234"
+// get weather
+#define WEB_SERVER "www.wttr.in"
+#define WEB_PORT "443"
 // HTTPS
 #define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t"
 #define SERVER_URL_MAX_SZ 256
 // HTTP
-//#define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
-#define WEB_PATH "/"
+#define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
+//#define WEB_PATH "/location"
 
 /* Timer interval once every day (24 Hours) */
 #define TIME_PERIOD (86400000000ULL)
@@ -326,16 +330,31 @@ static void http_get_task(void *pvParameters)
         ESP_LOGI(TAG, "... set socket receiving timeout success");
 
         /* Read HTTP response */
+	char* body_start = NULL;
         do {
             bzero(recv_buf, sizeof(recv_buf));
             r = read(s, recv_buf, sizeof(recv_buf)-1);
-            for(int i = 0; i < r; i++) {
+            /*for(int i = 0; i < r; i++) {
                 putchar(recv_buf[i]);
+		
+            }*/
+            if (body_start == NULL) {
+            	/* Look for the blank line signaling the start of the body */
+            	body_start = strstr(recv_buf, "\r\n\r\n");
+            	if (body_start != NULL) {
+     	            /* Move past the blank line */
+                    body_start += 4;
+            	}
+            }
+            if (r > 0 && body_start != NULL) {
+		int body_len = r - (body_start - recv_buf);
+            	printf("Body: %.*s", body_len, body_start);
             }
         } while(r > 0);
 
         ESP_LOGI(TAG, "... done reading from socket. Last read return=%d errno=%d.", r, errno);
         close(s);
+
         for(int countdown = 10; countdown >= 0; countdown--) {
             ESP_LOGI(TAG, "%d... ", countdown);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
@@ -556,10 +575,26 @@ static void https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, con
         len = ret;
         ESP_LOGD(TAG, "%d bytes read", len);
         /* Print response directly to stdout as it is read */
-        for (int i = 0; i < len; i++) {
+        /*for (int i = 0; i < len; i++) {
             putchar(buf[i]);
         }
         putchar('\n'); // JSON output doesn't have a newline at end
+	*/
+	char* body_start = NULL;	
+	if (body_start == NULL) {
+                /* Look for the blank line signaling the start of the body */
+                body_start = strstr(buf, "\r\n\r\n");
+                if (body_start != NULL) {
+                    /* Move past the blank line */
+                    body_start += 4;
+                }
+            }
+            if (ret > 0 && body_start != NULL) {
+                int body_len = ret - (body_start - buf);
+                printf("Body: %.*s", body_len, body_start);
+            }
+
+
     } while (1);
 
 cleanup:
@@ -690,8 +725,8 @@ void app_main(void)
     //xTaskCreate(&http_get_task, "http_get_task", 4096, NULL, 5, NULL);
   
     // HTTP POST request
-    xTaskCreate(&http_post_task, "http_post_task", 4096, NULL, 5, NULL);
+    //xTaskCreate(&http_post_task, "http_post_task", 4096, NULL, 5, NULL);
 
     // HTTPS request
-    //xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
+    xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
 }
