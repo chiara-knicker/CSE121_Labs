@@ -43,13 +43,14 @@
 //#include "time_sync.h"
 
 /* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "www.wttr.in"
-#define WEB_PORT "443"
+#define WEB_SERVER "chiara-raspberrypi.local"
+#define WEB_PORT "8000" // 443 for HTTPS, 80 for HTTP
 // HTTPS
 #define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t"
 #define SERVER_URL_MAX_SZ 256
 // HTTP
-#define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
+//#define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
+#define WEB_PATH "/"
 
 /* Timer interval once every day (24 Hours) */
 #define TIME_PERIOD (86400000000ULL)
@@ -665,8 +666,8 @@ void app_main(void)
     //xTaskCreate(&http_get_task, "http_get_task", 4096, NULL, 5, NULL);
   
     // HTTP POST request
-    //xTaskCreate(&http_post_task, "http_post_task", 4096, NULL, 5, NULL);
+    xTaskCreate(&http_post_task, "http_post_task", 4096, NULL, 5, NULL);
 
     // HTTPS request
-    xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
+    //xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
 }
