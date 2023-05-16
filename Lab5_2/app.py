@@ -8,7 +8,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length)
         print(post_data.decode('utf-8'))
 
-PORT = 8000
+PORT = 1234
 
 with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
     print("Server started on port", PORT)

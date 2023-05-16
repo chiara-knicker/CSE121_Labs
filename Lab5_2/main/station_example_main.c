@@ -42,9 +42,12 @@
 #endif
 //#include "time_sync.h"
 
+// I2C
+#include "i2c_api.h"
+
 /* Constants that aren't configurable in menuconfig */
 #define WEB_SERVER "chiara-raspberrypi.local"
-#define WEB_PORT "8000" // 443 for HTTPS, 80 for HTTP
+#define WEB_PORT "1234"
 // HTTPS
 #define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t"
 #define SERVER_URL_MAX_SZ 256
@@ -349,7 +352,7 @@ static const char *REQUEST_POST = "POST " WEB_PATH " HTTP/1.0\r\n"
     "\r\n"
     "%s";
 
-static const char *POST_DATA = "Hello World";
+static const char *POST_DATA = "Temperature is %.2fC (or %.2fF) with a %.2f%%  humidity\n";
 
 static void http_post_task(void *pvParameters)
 {
@@ -363,7 +366,25 @@ static void http_post_task(void *pvParameters)
     char recv_buf[64];
 
     while(1) {
-        int err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
+	// Read temperature and humidity
+        uint8_t data[6] = {0,};
+        uint16_t raw_humidity=0;
+	uint16_t raw_temp=0;
+
+	i2c_write_shtc3(SHTC3_CMD_MEASURE);
+	i2c_read_shtc3(data, 6);
+
+        raw_humidity = (data[3] << 8) | data[4];
+	raw_temp = (data[0] << 8) | data[1];
+        float humidity = calculate_humidity(raw_humidity);
+	float temp = calculate_temp(raw_temp);
+	float temp_f = calculate_temp_f(raw_temp);
+	
+	char post_data[100];
+	sprintf(post_data, POST_DATA, temp, temp_f, humidity);
+
+	// HTTP stuff
+	int err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
 
         if(err != 0 || res == NULL) {
             ESP_LOGE(TAG, "DNS lookup failed err=%d res=%p", err, res);
@@ -398,9 +419,9 @@ static void http_post_task(void *pvParameters)
         freeaddrinfo(res);
 
 	/* Prepare HTTP POST request */
-	int post_data_len = strlen(POST_DATA);
+	int post_data_len = strlen(post_data);
 	char post_request[strlen(REQUEST_POST) + post_data_len];
-	sprintf(post_request, REQUEST_POST, post_data_len, POST_DATA);
+	sprintf(post_request, REQUEST_POST, post_data_len, post_data);
 
 	if (write(s, post_request, strlen(post_request)) < 0) {
             ESP_LOGE(TAG, "... socket send failed");
@@ -662,6 +683,9 @@ void app_main(void)
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
     wifi_init_sta();
     
+    i2c_master_init();
+
+
     // HTTP GET request
     //xTaskCreate(&http_get_task, "http_get_task", 4096, NULL, 5, NULL);
   
