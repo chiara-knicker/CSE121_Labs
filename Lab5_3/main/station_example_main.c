@@ -46,18 +46,7 @@
 #include "i2c_api.h"
 
 /* Constants that aren't configurable in menuconfig */
-// get location and send data
-//#define WEB_SERVER "chiara-raspberrypi.local"
-//#define WEB_PORT "1234"
-// get weather
-#define WEB_SERVER "www.wttr.in"
-#define WEB_PORT "443"
-// HTTPS
-#define WEB_URL "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t"
 #define SERVER_URL_MAX_SZ 256
-// HTTP
-#define WEB_PATH "/Santa+Cruz?format=%l:+%c+%t/"
-//#define WEB_PATH "/location"
 
 /* Timer interval once every day (24 Hours) */
 #define TIME_PERIOD (86400000000ULL)
@@ -141,6 +130,10 @@ static const char *TAG = "wifi station";
 
 static int s_retry_num = 0;
 
+static const char* web_server = "www.example.com";
+static const char* web_port = "80";
+static const char* web_url = "";
+static const char* web_path = "/";
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
@@ -203,22 +196,10 @@ void wifi_init_sta(void)
     // Eduroam 
     if (CONNECTION == 3) {
     	// Eduroam
-	/*//wifi_config.sta.password = "exampleEmail:examplePassword";
+	//wifi_config.sta.password = "exampleEmail:examplePassword";
         wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE;
         wifi_config.sta.pmf_cfg.capable = true;
-        wifi_config.sta.pmf_cfg.required = false;*/
-    	
-	wifi_config_t wifi_config = {
-            .sta = {
-            	.ssid = EXAMPLE_ESP_WIFI_SSID,
-            	.password = "exampleEmail:examplePassword",
-            	.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE,
-	    	.pmf_cfg = {
-                    .capable = true,
-                    .required = false,
-            	},
-            },
-    	};
+        wifi_config.sta.pmf_cfg.required = false;
 
     	// Enable EAP-PEAP authentication
     	esp_wifi_sta_wpa2_ent_enable();
@@ -258,13 +239,16 @@ void wifi_init_sta(void)
 
 // ------------- For HTTP requests --------------
 
-static const char *REQUEST = "GET " WEB_PATH " HTTP/1.0\r\n"
-    "Host: "WEB_SERVER":"WEB_PORT"\r\n"
+static const char *GET_REQUEST_FORMAT = "GET %s HTTP/1.0\r\n"
+    "Host: %s:%s\r\n"
     "User-Agent: esp-idf/1.0 esp32\r\n"
     "\r\n";
 
-static void http_get_task(void *pvParameters)
+char GET_REQUEST[512];
+
+static char* http_get_request(void *pvParameters)
 {
+    sprintf(GET_REQUEST, GET_REQUEST_FORMAT, web_path, web_server, web_port); 
     const struct addrinfo hints = {
         .ai_family = AF_INET,
         .ai_socktype = SOCK_STREAM,
@@ -274,13 +258,14 @@ static void http_get_task(void *pvParameters)
     int s, r;
     char recv_buf[64];
 
-    while(1) {
-        int err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
+    char* body_content = NULL;
+
+        int err = getaddrinfo(web_server, web_port, &hints, &res);
 
         if(err != 0 || res == NULL) {
             ESP_LOGE(TAG, "DNS lookup failed err=%d res=%p", err, res);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
-            continue;
+            return body_content;
         }
 
         /* Code to print the resolved IP.
@@ -294,7 +279,7 @@ static void http_get_task(void *pvParameters)
             ESP_LOGE(TAG, "... Failed to allocate socket.");
             freeaddrinfo(res);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
-            continue;
+            return body_content;
         }
         ESP_LOGI(TAG, "... allocated socket");
 
@@ -303,17 +288,17 @@ static void http_get_task(void *pvParameters)
             close(s);
             freeaddrinfo(res);
             vTaskDelay(4000 / portTICK_PERIOD_MS);
-            continue;
+            return body_content;
         }
 
         ESP_LOGI(TAG, "... connected");
         freeaddrinfo(res);
 
-        if (write(s, REQUEST, strlen(REQUEST)) < 0) {
+        if (write(s, GET_REQUEST, strlen(GET_REQUEST)) < 0) {
             ESP_LOGE(TAG, "... socket send failed");
             close(s);
             vTaskDelay(4000 / portTICK_PERIOD_MS);
-            continue;
+            return body_content;
         }
         ESP_LOGI(TAG, "... socket send success");
 
@@ -325,7 +310,7 @@ static void http_get_task(void *pvParameters)
             ESP_LOGE(TAG, "... failed to set socket receiving timeout");
             close(s);
             vTaskDelay(4000 / portTICK_PERIOD_MS);
-            continue;
+            return body_content;
         }
         ESP_LOGI(TAG, "... set socket receiving timeout success");
 
@@ -348,23 +333,23 @@ static void http_get_task(void *pvParameters)
             }
             if (r > 0 && body_start != NULL) {
 		int body_len = r - (body_start - recv_buf);
-            	printf("Body: %.*s", body_len, body_start);
+            	//printf("Body: %.*s", body_len, body_start);
+		
+		body_content = (char*)malloc(body_len + 1); // Allocate memory for the body content (+1 for null terminator
+                strncpy(body_content, body_start, body_len); // Copy the body content into the allocated memory
+                body_content[body_len] = '\0'; // Null-terminate the string
+
             }
         } while(r > 0);
 
         ESP_LOGI(TAG, "... done reading from socket. Last read return=%d errno=%d.", r, errno);
         close(s);
 
-        for(int countdown = 10; countdown >= 0; countdown--) {
-            ESP_LOGI(TAG, "%d... ", countdown);
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
-        }
-        ESP_LOGI(TAG, "Starting again!");
-    }
+	return body_content;
 }
 
-static const char *REQUEST_POST = "POST " WEB_PATH " HTTP/1.0\r\n"
-    "Host: chiara-raspberrypi:"WEB_PORT"\r\n"
+static const char *POST_REQUEST_FORMAT = "POST %s HTTP/1.0\r\n"
+    "Host: %s:%s\r\n"
     "User-Agent: esp-idf/1.0 esp32\r\n"
     "Content-Type: text/plain; charset=utf-8\r\n"
     "Content-Length: %d\r\n"
@@ -373,7 +358,7 @@ static const char *REQUEST_POST = "POST " WEB_PATH " HTTP/1.0\r\n"
 
 static const char *POST_DATA = "Temperature is %.2fC (or %.2fF) with a %.2f%%  humidity\n";
 
-static void http_post_task(void *pvParameters)
+static void http_post_request(void *pvParameters)
 {
     const struct addrinfo hints = {
         .ai_family = AF_INET,
@@ -384,7 +369,6 @@ static void http_post_task(void *pvParameters)
     int s, r;
     char recv_buf[64];
 
-    while(1) {
 	// Read temperature and humidity
         uint8_t data[6] = {0,};
         uint16_t raw_humidity=0;
@@ -403,12 +387,12 @@ static void http_post_task(void *pvParameters)
 	sprintf(post_data, POST_DATA, temp, temp_f, humidity);
 
 	// HTTP stuff
-	int err = getaddrinfo(WEB_SERVER, WEB_PORT, &hints, &res);
+	int err = getaddrinfo(web_server, web_port, &hints, &res);
 
         if(err != 0 || res == NULL) {
             ESP_LOGE(TAG, "DNS lookup failed err=%d res=%p", err, res);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
-            continue;
+            return;
         }
 
         /* Code to print the resolved IP.
@@ -422,7 +406,7 @@ static void http_post_task(void *pvParameters)
             ESP_LOGE(TAG, "... Failed to allocate socket.");
             freeaddrinfo(res);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
-            continue;
+            return;
         }
         ESP_LOGI(TAG, "... allocated socket");
 
@@ -431,7 +415,7 @@ static void http_post_task(void *pvParameters)
             close(s);
             freeaddrinfo(res);
             vTaskDelay(4000 / portTICK_PERIOD_MS);
-            continue;
+            return;
         }
 
         ESP_LOGI(TAG, "... connected");
@@ -439,14 +423,14 @@ static void http_post_task(void *pvParameters)
 
 	/* Prepare HTTP POST request */
 	int post_data_len = strlen(post_data);
-	char post_request[strlen(REQUEST_POST) + post_data_len];
-	sprintf(post_request, REQUEST_POST, post_data_len, post_data);
+	char post_request[strlen(POST_REQUEST_FORMAT) + post_data_len + 256];
+	sprintf(post_request, POST_REQUEST_FORMAT, web_path, web_server, web_port, post_data_len, post_data);
 
 	if (write(s, post_request, strlen(post_request)) < 0) {
             ESP_LOGE(TAG, "... socket send failed");
             close(s);
             vTaskDelay(4000 / portTICK_PERIOD_MS);
-            continue;
+            return;
         }
         ESP_LOGI(TAG, "... socket send success");
 
@@ -458,7 +442,7 @@ static void http_post_task(void *pvParameters)
             ESP_LOGE(TAG, "... failed to set socket receiving timeout");
             close(s);
             vTaskDelay(4000 / portTICK_PERIOD_MS);
-            continue;
+            return;
         }
         ESP_LOGI(TAG, "... set socket receiving timeout success");
 
@@ -473,21 +457,17 @@ static void http_post_task(void *pvParameters)
 
         ESP_LOGI(TAG, "... done reading from socket. Last read return=%d errno=%d.", r, errno);
         close(s);
-        for(int countdown = 10; countdown >= 0; countdown--) {
-            ESP_LOGI(TAG, "%d... ", countdown);
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
-        }
-        ESP_LOGI(TAG, "Starting again!");
-    }
 }
 
 // ------------- For HTTPS requests --------------
 
-static const char HOWSMYSSL_REQUEST[] = "GET " WEB_PATH " HTTP/1.1\r\n"
-                             "Host: "WEB_SERVER":"WEB_PORT"\r\n"
+static const char HOWSMYSSL_REQUEST_FORMAT[] = "GET %s HTTP/1.1\r\n"
+                             "Host: %s:%s\r\n"
                              "User-Agent: esp-idf/1.0 esp32\r\n"
                              "Accept: */*\r\n"
                              "\r\n";
+
+char HOWSMYSSL_REQUEST[512];
 
 #ifdef CONFIG_EXAMPLE_CLIENT_SESSION_TICKETS
 static const char LOCAL_SRV_REQUEST[] = "GET " CONFIG_EXAMPLE_LOCAL_SERVER_URL " HTTP/1.1\r\n"
@@ -516,10 +496,12 @@ static esp_tls_client_session_t *tls_client_session = NULL;
 static bool save_client_session = false;
 #endif
 
-static void https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, const char *REQUEST)
+static char* https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, const char *REQUEST)
 {
     char buf[512];
     int ret, len;
+
+    char* body_content = NULL;
 
     esp_tls_t *tls = esp_tls_init();
     if (!tls) {
@@ -574,12 +556,6 @@ static void https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, con
 
         len = ret;
         ESP_LOGD(TAG, "%d bytes read", len);
-        /* Print response directly to stdout as it is read */
-        /*for (int i = 0; i < len; i++) {
-            putchar(buf[i]);
-        }
-        putchar('\n'); // JSON output doesn't have a newline at end
-	*/
 	char* body_start = NULL;	
 	if (body_start == NULL) {
                 /* Look for the blank line signaling the start of the body */
@@ -591,7 +567,11 @@ static void https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, con
             }
             if (ret > 0 && body_start != NULL) {
                 int body_len = ret - (body_start - buf);
-                printf("Body: %.*s", body_len, body_start);
+                //printf("Body: %.*s", body_len, body_start);
+
+		body_content = (char*)malloc(body_len + 1); // Allocate memory for the body content (+1 for null terminator
+		strncpy(body_content, body_start, body_len); // Copy the body content into the allocated memory
+    		body_content[body_len] = '\0'; // Null-terminate the string
             }
 
 
@@ -600,10 +580,7 @@ static void https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, con
 cleanup:
     esp_tls_conn_destroy(tls);
 exit:
-    for (int countdown = 10; countdown >= 0; countdown--) {
-        ESP_LOGI(TAG, "%d...", countdown);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
+    return body_content;
 }
 
 #if CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
@@ -613,9 +590,23 @@ static void https_get_request_using_crt_bundle(void)
     esp_tls_cfg_t cfg = {
         .crt_bundle_attach = esp_crt_bundle_attach,
     };
-    https_get_request(cfg, WEB_URL, HOWSMYSSL_REQUEST);
+    https_get_request(cfg, web_url, HOWSMYSSL_REQUEST);
 }
 #endif // CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
+
+#if CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
+static char* https_get_request_lab(void)
+{
+    sprintf(HOWSMYSSL_REQUEST, HOWSMYSSL_REQUEST_FORMAT, web_path, web_server, web_port);
+    ESP_LOGI(TAG, "https_request using crt bundle (lab function)");
+    esp_tls_cfg_t cfg = {
+        .crt_bundle_attach = esp_crt_bundle_attach,
+    };
+    char* ret = https_get_request(cfg, web_url, HOWSMYSSL_REQUEST);
+    return ret;
+}
+#endif // CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
+
 
 static void https_get_request_using_cacert_buf(void)
 {
@@ -624,7 +615,7 @@ static void https_get_request_using_cacert_buf(void)
         .cacert_buf = (const unsigned char *) server_root_cert_pem_start,
         .cacert_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
     };
-    https_get_request(cfg, WEB_URL, HOWSMYSSL_REQUEST);
+    https_get_request(cfg, web_url, HOWSMYSSL_REQUEST);
 }
 
 static void https_get_request_using_global_ca_store(void)
@@ -639,7 +630,7 @@ static void https_get_request_using_global_ca_store(void)
     esp_tls_cfg_t cfg = {
         .use_global_ca_store = true,
     };
-    https_get_request(cfg, WEB_URL, HOWSMYSSL_REQUEST);
+    https_get_request(cfg, web_url, HOWSMYSSL_REQUEST);
     esp_tls_free_global_ca_store();
 }
 
@@ -669,9 +660,28 @@ static void https_get_request_using_already_saved_session(const char *url)
 }
 #endif
 
-static void https_request_task(void *pvparameters)
+static void lab5_3_task(void *pvparameters)
 {
-    ESP_LOGI(TAG, "Start https_request example");
+    /*--------------- HTTP GET request to pi ---------------------*/
+    //web_server = "chiara-raspberrypi.local";
+    //web_port = "1234";
+    //web_path = "/location";
+
+    char* body_content = "Santa+Cruz"; //http_get_request(NULL);
+    printf("Body content GET to Pi: %s\n", body_content);
+
+    /*----------------- HTTPS GET to wttr.in ---------------------*/
+    ESP_LOGI(TAG, "Start https_request to wttr.in");
+
+    web_server = "wttr.in";
+    web_port = "443";
+    web_url = "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t";
+    //char* web_url_format = "https://www.wttr.in/%s?format=%%l:+%%c+%%t";
+    //char web_url[256];
+    //sprintf(web_url, web_url_format, body_content);
+    web_path = "/Santa+Cruz?format=%l:+%c+%t/";
+    printf("This is the web URL: %s\n", web_url);
+    //free(body_content);
 
 #ifdef CONFIG_EXAMPLE_CLIENT_SESSION_TICKETS
     char *server_url = NULL;
@@ -695,13 +705,22 @@ static void https_request_task(void *pvparameters)
     https_get_request_using_already_saved_session(server_url);
 #endif
 
-#if CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
-    https_get_request_using_crt_bundle();
-#endif
     ESP_LOGI(TAG, "Minimum free heap size: %" PRIu32 " bytes", esp_get_minimum_free_heap_size());
-    https_get_request_using_cacert_buf();
-    https_get_request_using_global_ca_store();
-    ESP_LOGI(TAG, "Finish https_request example");
+    body_content = https_get_request_lab();
+    printf("Body content GET to wttr.in: %s\n", body_content);
+    free(body_content);
+    ESP_LOGI(TAG, "Finish https_request to wttr.in");
+
+    /*--------------- HTTP POST request to pi --------------------*/
+    web_server = "chiara-raspberrypi.local";
+    web_port = "1234";
+    web_path = "/";
+
+    while(1) {
+    	http_post_request(NULL);
+    	printf("POST request sent to Pi");
+	vTaskDelay(pdMS_TO_TICKS(5000));
+    }
     vTaskDelete(NULL);
 }
 
@@ -728,5 +747,5 @@ void app_main(void)
     //xTaskCreate(&http_post_task, "http_post_task", 4096, NULL, 5, NULL);
 
     // HTTPS request
-    xTaskCreate(&https_request_task, "https_get_task", 8192, NULL, 5, NULL);
+    xTaskCreate(&lab5_3_task, "lab5_3__task", 8192, NULL, 5, NULL);
 }
