@@ -2,12 +2,13 @@
 
 ## Issues
 
+Code:
 ```
 char* web_url_format = "https://www.wttr.in/%s?format=%%l:+%%c+%%t";
 char web_url[strlen(web_url_format) + strlen(body_content) + 1];
 sprintf(web_url, web_url_format, body_content);
 ```
-
+Error:
 ```
 I (4445) wifi station: Minimum free heap size: 222580 bytes
 I (4445) wifi station: https_request using crt bundle (lab function)
@@ -59,15 +60,13 @@ load:0x403ce710,len:0x2f68
 entry 0x403cc710
 ```
 Fix:
-
 ```
 char* web_url_format = "https://www.wttr.in/%s?format=%%l:+%%c+%%t";
 char web_url_temp[strlen(web_url_format) + strlen(body_content) + 1];
 sprintf(web_url_temp, web_url_format, body_content);
 web_url = web_url_temp;
 ```
-
-Reason:
+Explanation:
 
 In the first code snippet, web_url is an array of characters that is being dynamically allocated on the stack using the sprintf function. Its size is calculated based on the lengths of web_url_format and body_content. This array stores a modified version of the URL with the format specifier %s replaced by the value of body_content. web_url is an array of characters that can be modified.
 
