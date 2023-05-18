@@ -356,9 +356,10 @@ static const char *POST_REQUEST_FORMAT = "POST %s HTTP/1.0\r\n"
     "\r\n"
     "%s";
 
-static const char *POST_DATA = "Temperature is %.2fC (or %.2fF) with a %.2f%%  humidity\n";
+static const char *POST_DATA = "Temperature is %.2fC (or %.2fF) with a %.2f%%  humidity\n"
+    "Weather from wttr.in: %s\n";
 
-static void http_post_request(void *pvParameters)
+static void http_post_request(void *pvParameters, char* weather_data)
 {
     const struct addrinfo hints = {
         .ai_family = AF_INET,
@@ -384,7 +385,7 @@ static void http_post_request(void *pvParameters)
 	float temp_f = calculate_temp_f(raw_temp);
 	
 	char post_data[100];
-	sprintf(post_data, POST_DATA, temp, temp_f, humidity);
+	sprintf(post_data, POST_DATA, temp, temp_f, humidity, weather_data);
 
 	// HTTP stuff
 	int err = getaddrinfo(web_server, web_port, &hints, &res);
@@ -662,12 +663,15 @@ static void https_get_request_using_already_saved_session(const char *url)
 
 static void lab5_3_task(void *pvparameters)
 {
+    char* body_content;
+    while(1)
+    {
     /*--------------- HTTP GET request to pi ---------------------*/
-    //web_server = "chiara-raspberrypi.local";
-    //web_port = "1234";
-    //web_path = "/location";
+    web_server = "chiara-raspberrypi.local";
+    web_port = "1234";
+    web_path = "/location";
 
-    char* body_content = "Santa+Cruz"; //http_get_request(NULL);
+    body_content = http_get_request(NULL);
     printf("Body content GET to Pi: %s\n", body_content);
 
     /*----------------- HTTPS GET to wttr.in ---------------------*/
@@ -675,13 +679,12 @@ static void lab5_3_task(void *pvparameters)
 
     web_server = "wttr.in";
     web_port = "443";
-    web_url = "https://www.wttr.in/Santa+Cruz?format=%l:+%c+%t";
-    //char* web_url_format = "https://www.wttr.in/%s?format=%%l:+%%c+%%t";
-    //char web_url[256];
-    //sprintf(web_url, web_url_format, body_content);
+    char* web_url_format = "https://www.wttr.in/%s?format=%%l:+%%c+%%t";
+    char web_url_temp[strlen(web_url_format) + strlen(body_content) + 1];
+    sprintf(web_url_temp, web_url_format, body_content);
+    web_url = web_url_temp;
     web_path = "/Santa+Cruz?format=%l:+%c+%t/";
     printf("This is the web URL: %s\n", web_url);
-    //free(body_content);
 
 #ifdef CONFIG_EXAMPLE_CLIENT_SESSION_TICKETS
     char *server_url = NULL;
@@ -708,7 +711,7 @@ static void lab5_3_task(void *pvparameters)
     ESP_LOGI(TAG, "Minimum free heap size: %" PRIu32 " bytes", esp_get_minimum_free_heap_size());
     body_content = https_get_request_lab();
     printf("Body content GET to wttr.in: %s\n", body_content);
-    free(body_content);
+    //free(body_content);
     ESP_LOGI(TAG, "Finish https_request to wttr.in");
 
     /*--------------- HTTP POST request to pi --------------------*/
@@ -716,9 +719,10 @@ static void lab5_3_task(void *pvparameters)
     web_port = "1234";
     web_path = "/";
 
-    while(1) {
-    	http_post_request(NULL);
-    	printf("POST request sent to Pi");
+    //while(1) {
+    	http_post_request(NULL, body_content);
+	free(body_content);
+    	printf("POST request sent to Pi\n");
 	vTaskDelay(pdMS_TO_TICKS(5000));
     }
     vTaskDelete(NULL);
