@@ -1,4 +1,5 @@
 /esp-idf/
+/WiringPi/
 build/
 sdkconfig
 riscv32-esp-elf-gdb/
