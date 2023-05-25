@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "driver/adc.h"
 #include "esp_system.h"
+#include "freertos/task.h"
 
 #include <esp_timer.h>
 #include <string.h>
@@ -78,14 +78,6 @@ void processSignal() {
             aboveThreshold = 1;
 
             if (!signalOn) {
-		duration = esp_timer_get_time() - startTime;
-		if (duration > 500000) {
-		    // Decode the previous signal and print character
-                    decodedChar = decodeMorse(morseSignal);
-                    printf("%c\n", decodedChar);
-                    fflush(stdout);
-                    memset(morseSignal, 0, sizeof(morseSignal));
-		}
                 startTime = esp_timer_get_time();
                 signalOn = 1;
             }
@@ -104,7 +96,16 @@ void processSignal() {
 		}
 
 		startTime = esp_timer_get_time();
-            }
+            } else {
+		 duration = esp_timer_get_time() - startTime;
+		 if (duration > 500000 && strlen(morseSignal) > 0) {
+		    // Decode the previous signal and print character
+                    decodedChar = decodeMorse(morseSignal);
+                    printf("%c\n", decodedChar);
+                    fflush(stdout);
+                    memset(morseSignal, 0, sizeof(morseSignal));
+		}  
+	    }
 	}
 
         vTaskDelay(pdMS_TO_TICKS(100));  // delay for 100 millisecond
