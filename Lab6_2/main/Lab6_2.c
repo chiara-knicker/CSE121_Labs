@@ -11,7 +11,7 @@
 #define DOT_DURATION 250    // Duration of a dot in milliseconds
 #define DASH_DURATION 750   // Duration of a dash in milliseconds
 #define CHARACTER_DELAY 750 // Delay between characters in milliseconds
-#define THRESHOLD 60       // ADC threshold value for detecting signal changes
+//#define THRESHOLD 60       // ADC threshold value for detecting signal changes
 
 // Morse code dictionary
 const char* morseCode[] = {
@@ -70,6 +70,12 @@ void processSignal() {
     unsigned long duration = 0;
     char morseSignal[10] = "";  // Maximum Morse code length
     char decodedChar;
+
+    int THRESHOLD = getADCVal();
+    printf("Base: %d\n", THRESHOLD);
+
+    THRESHOLD = getADCVal() + 10;
+    printf("Threshold: %d\n", THRESHOLD);
 
     while (1) {
         int adcValue = getADCVal();  // Function to get ADC value from the photodiode
