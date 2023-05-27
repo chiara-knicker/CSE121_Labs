@@ -47,10 +47,10 @@ const char* morseCode[] = {
 char decodeMorse(const char* signal) {
     for (int i = 0; i < 26; i++) {
         if (strcmp(signal, morseCode[i]) == 0) {
-            return 'A' + i;
+            return 'a' + i;
         }
     }
-    return '_';  // Return '' if no match is found
+    return '?';  // Return '?' if no match is found
 }
 
 #define ADC_CHANNEL ADC_CHANNEL_0
@@ -71,10 +71,11 @@ void processSignal() {
     char morseSignal[10] = "";  // Maximum Morse code length
     char decodedChar;
 
+    
     int THRESHOLD = getADCVal();
     printf("Base: %d\n", THRESHOLD);
 
-    THRESHOLD = getADCVal() + 10;
+    THRESHOLD = THRESHOLD + 10;
     printf("Threshold: %d\n", THRESHOLD);
 
     while (1) {
@@ -107,8 +108,8 @@ void processSignal() {
 		 if (duration > 500000 && strlen(morseSignal) > 0) {
 		    // Decode the previous signal and print character
                     decodedChar = decodeMorse(morseSignal);
-                    printf("%c\n", decodedChar);
-                    fflush(stdout);
+		    printf("%c\n", decodedChar);
+                    //fflush(stdout);
                     memset(morseSignal, 0, sizeof(morseSignal));
 		}  
 	    }
