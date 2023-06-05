@@ -120,9 +120,9 @@ The wifi_config struct contains various fields for configuring the connection to
 
 If the connection is Eduroam, a few extra fields need to be set for successful authorization to connect to it. To do this, I am redefining the wifi_config variable with the appropriate values. The password parameter now includes the username. Additionally, EAP-PEAP authentication needs to be enabled, which is the authentication that Eduroam uses. Finally, the EAP identity needs to be set, which include setting the username and password.
 
-### Sending HTTP request
+### Sending HTTP(S) GET requests
 
-#### GET request
+#### HTTP
 
 ```
 static const char *REQUEST = "GET " WEB_PATH " HTTP/1.0\r\n"
@@ -140,37 +140,7 @@ static void http_get_task(void *pvParameters)
 ```
 This is the task to send the specified GET request.
 
-#### POST request
-
-```
-static const char *REQUEST_POST = "POST " WEB_PATH " HTTP/1.0\r\n"
-    "Host: chiara-raspberrypi:"WEB_PORT"\r\n"
-    "User-Agent: esp-idf/1.0 esp32\r\n"
-    "Content-Type: text/plain; charset=utf-8\r\n"
-    "Content-Length: %d\r\n"
-    "\r\n"
-    "%s";
-
-static const char *POST_DATA = "Hello World";
-```
-This is the POST rewuest to be sent and the data that should be sent to the specified WEB_PATH and WEB_PORT. In this case, the web server is my Pi which is named chiara-raspberrypi. This is where I am hosting a simple web server that will be able to receive POST requests. The code for this is in Lab5_2. If connected to Eduroam, this will have to be adjusted to the IP address that is assigned to the Pi. This IP address can be found using the command ```ip a``` on the Pi.
-
-```
-static void http_post_task(void *pvParameters)
-{
-...
-
-	/* Prepare HTTP POST request */
-	int post_data_len = strlen(POST_DATA);
-	char post_request[strlen(REQUEST_POST) + post_data_len];
-	sprintf(post_request, REQUEST_POST, post_data_len, POST_DATA);
-
-...
-}
-```
-This is the task to send the specified POST request. The shown part prepares the request by filling in the format specifiers in REQUEST_POST, including the contnt length and POST_DATA.
-
-### Sending HTTPS request
+### HTTPS
 
 ```
 static const char HOWSMYSSL_REQUEST[] = "GET " WEB_PATH " HTTP/1.1\r\n"
