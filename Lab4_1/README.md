@@ -51,21 +51,21 @@ I also changed the write function to return void instead of size_t since I do no
 
 ## Sending commands to LCD
 
-* command()
+* command() <br>
 The command() function takes an 8 bit integer value as input. This value is the command that should be sent to the LCD. It is stored in a buffer together with the value 0x80. The binary representation of 0x80 is 10000000. This is the control byte that has to be sent before every data byte (Datasheet p.6). The function then calls the send() function to send the control byte and data byte (input value).
 
-* send()
+* send() <br>
 The send() function takes the data and data length as input. It then loops over the data buffer to write each byte to i2c.
 
-* begin()
+* begin() <br>
 The begin() function initializes the LCD display with the specified settings. It first sends the Function Set command, which sets the number of display lines and the display font type. Then it sends the Entry Mode Set command to turn the display on with no cursor and blinking default. Finally, it initialized the backlight and sets it's color to white. The appropriate commands are constructed using binary operations. The command formats can be found in the datasheet on page 9.
 
 ## Writing to LCD
 
-* write()
+* write() <br>
 The write function is similar to the send() function, but it is used to write characters to the LCD to display them. Since it isn't sending a command to the LCD, it sends a different control byte before the data byte. The print() function repeatedly calls the write function when iterating over the input String to send one character at a time that should be displayed on the LCD.
 
 ## Sending data to RGB backlight
 
-* setReg()
+* setReg() <br>
 The setReg() function is similar to the send() function, but it is used to write to the RGB light. It is used to send the RGB values to the backlight to change its color. The address specifies the color register (R, G, B) and the data is the color value to set it to. Writing to the backlight does not require a control byte.
