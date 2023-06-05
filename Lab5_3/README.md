@@ -1,5 +1,22 @@
 # Lab 5.3
 
+This lab is using the station example from the esp-idf GitHub repository.
+
+https://github.com/espressif/esp-idf/tree/17451f1fb3d6485af5113d96b6836a7ce60efee8/examples/wifi/getting_started/station
+
+## File descriptions
+
+* ```local_server_cert.perm``` certificate needed to send HTTPS request using cacert buf, global ca store or to local server
+* ```server_root_cert.perm``` certificate needed to send HTTPS request using cacert buf, global ca store or to local server
+* ```station_example_main.c``` contains functionality to send requests
+* ```i2c_api``` 
+* ```app.py``` This is the simple web server that will be hosted on the Pi
+* ```requests_api``` 
+
+## station_example_main.c
+
+
+
 ## Issues
 
 Code:
