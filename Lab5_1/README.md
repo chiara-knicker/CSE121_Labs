@@ -90,7 +90,7 @@ void wifi_init_sta(void)
 	    wifi_config_t wifi_config = {
             .sta = {
             	.ssid = EXAMPLE_ESP_WIFI_SSID,
-            	.password = "exampleEmail:examplePassword",
+            	.password = "username:password",
             	.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE,
 	    	.pmf_cfg = {
                     .capable = true,
@@ -157,22 +157,28 @@ static void https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, con
 ...
 }
 ```
-This is the function that sends the GET request using HTTPS. It is called by various functions that use different methods to send the request.
+This function is responsible for establishing a secure connection with the server and sending the HTTP GET request. It takes the TLS configuration, the server URL, and the request string as input. It is called by various functions that use different methods to send the request.
 
 - ```https_get_request_using_crt_bundle(void)```
+This function demonstrates how to send an HTTPS request using a certificate bundle.
 
+This method allows you to attach a certificate bundle to the TLS configuration. A certificate bundle is a file that contains multiple certificates in a concatenated format. It is useful when you have a bundle of trusted certificates, and you want to use them for establishing secure connections. This method uses the esp_crt_bundle_attach function to attach the certificate bundle.
 
 - ```https_get_request_using_cacert_buf(void)```
+This function demonstrates how to send an HTTPS request using a certificate buffer.
 
+This method allows you to specify the root certificate directly as a buffer in the code. The root certificate is the certificate of the certificate authority (CA) that signed the server's certificate. This method is useful when you have the root certificate in a PEM format and want to include it in your code. It uses the server_root_cert_pem_start and server_root_cert_pem_end variables to specify the certificate buffer.
 
 - ```https_get_request_using_global_ca_store(void)```
+This function demonstrates how to send an HTTPS request using the global CA store.
 
+This method allows you to set a global CA store for the TLS configuration. The global CA store contains a list of trusted root certificates. This method is useful when you have a set of trusted root certificates and want to use them across multiple HTTPS requests. It uses the esp_tls_set_global_ca_store function to set the global CA store.
 
 - ```https_get_request_to_local_server(const char* url)```
-
+This function demonstrates how to send an HTTPS request to a local server. It uses the local_server_cert_pem_start and local_server_cert_pem_end variables to specify the local server's certificate.
 
 - ```https_get_request_using_already_saved_session(const char *url)```
-
+This function demonstrates how to send an HTTPS request using an already saved client session. It uses the tls_client_session variable to specify the saved session.
 
 
 ```
@@ -181,4 +187,4 @@ static void https_request_task(void *pvparameters)
 ...
 }
 ```
-This is the task to send the specified GET request using HTTPS. It calls several of the different functions used to send the request using different methods.
+This is the task function that demonstrates the usage of the above functions. It calls the different HTTPS request functions based on the configuration options.
