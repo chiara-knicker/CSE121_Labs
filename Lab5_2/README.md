@@ -63,4 +63,22 @@ This is the task to send the specified POST request. It first uses the I2C api t
 
 ## app.py
 
-This is the code to host a simple web server on the Pi that can receive HTTP POST request. When it receives a POST request, it prints the content of the request.
+This sets up a simple HTTP server that listens on the specified port and uses the custom request handler (MyHandler) to handle incoming POST requests and print their content to the console.
+
+```
+class MyHandler(http.server.BaseHTTPRequestHandler):
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        print(post_data.decode('utf-8'))
+```
+This defines a custom request handler by subclassing http.server.BaseHTTPRequestHandler. In this case, we override the do_POST() method to handle POST requests. It reads the content of the POST request and prints it to the console.
+
+```
+with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
+    print("Server started on port", PORT)
+    httpd.serve_forever()
+```
+This creates an instance of socketserver.TCPServer by passing an empty string as the hostname and the desired port number (PORT) along with the custom request handler class (MyHandler). By specifying an empty string as the hostname, the server will listen on all available network interfaces, enabling it to accept requests from both the local network and external network connections. The server is then started by calling the serve_forever() method. This method runs an infinite loop to handle incoming requests.
+
+Additionally, it prints a message indicating that the server has started, including the port number on which it is listening.
