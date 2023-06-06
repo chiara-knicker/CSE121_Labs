@@ -160,25 +160,29 @@ static void https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, con
 This function is responsible for establishing a secure connection with the server and sending the HTTP GET request. It takes the TLS configuration, the server URL, and the request string as input. It is called by various functions that use different methods to send the request.
 
 - ```https_get_request_using_crt_bundle(void)```
-This function demonstrates how to send an HTTPS request using a certificate bundle.
+Send an HTTPS request using a certificate bundle.
 
 This method allows you to attach a certificate bundle to the TLS configuration. A certificate bundle is a file that contains multiple certificates in a concatenated format. It is useful when you have a bundle of trusted certificates, and you want to use them for establishing secure connections. This method uses the esp_crt_bundle_attach function to attach the certificate bundle.
 
 - ```https_get_request_using_cacert_buf(void)```
-This function demonstrates how to send an HTTPS request using a certificate buffer.
+Send an HTTPS request using a certificate buffer.
 
 This method allows you to specify the root certificate directly as a buffer in the code. The root certificate is the certificate of the certificate authority (CA) that signed the server's certificate. This method is useful when you have the root certificate in a PEM format and want to include it in your code. It uses the server_root_cert_pem_start and server_root_cert_pem_end variables to specify the certificate buffer.
 
 - ```https_get_request_using_global_ca_store(void)```
-This function demonstrates how to send an HTTPS request using the global CA store.
+Send an HTTPS request using the global CA store.
 
 This method allows you to set a global CA store for the TLS configuration. The global CA store contains a list of trusted root certificates. This method is useful when you have a set of trusted root certificates and want to use them across multiple HTTPS requests. It uses the esp_tls_set_global_ca_store function to set the global CA store.
 
 - ```https_get_request_to_local_server(const char* url)```
-This function demonstrates how to send an HTTPS request to a local server. It uses the local_server_cert_pem_start and local_server_cert_pem_end variables to specify the local server's certificate.
+Send an HTTPS request to a local server. 
+
+It uses the local_server_cert_pem_start and local_server_cert_pem_end variables to specify the local server's certificate.
 
 - ```https_get_request_using_already_saved_session(const char *url)```
-This function demonstrates how to send an HTTPS request using an already saved client session. It uses the tls_client_session variable to specify the saved session.
+Send an HTTPS request using an already saved client session. 
+
+It uses the tls_client_session variable to specify the saved session.
 
 
 ```
