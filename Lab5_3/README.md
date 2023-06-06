@@ -15,6 +15,160 @@ https://github.com/espressif/esp-idf/tree/17451f1fb3d6485af5113d96b6836a7ce60efe
 
 ## station_example_main.c
 
+### HTTP GET request
+```
+static const char *GET_REQUEST_FORMAT = "GET %s HTTP/1.0\r\n"
+    "Host: %s:%s\r\n"
+    "User-Agent: esp-idf/1.0 esp32\r\n"
+    "\r\n";
+
+char GET_REQUEST[512];
+```
+The GET_REQUEST_FORMAT includes format specifiers to make the web path, web server and port number customizable. I did this because this lab requires me to send requests to different destinations, unlike in Lab 5.1.
+
+```
+static char* http_get_request(void *pvParameters)
+{
+    sprintf(GET_REQUEST, GET_REQUEST_FORMAT, web_path, web_server, web_port); 
+    
+    ...
+    
+    /* Read HTTP response */
+	char* body_start = NULL;
+        do {
+            bzero(recv_buf, sizeof(recv_buf));
+            r = read(s, recv_buf, sizeof(recv_buf)-1);
+            /*for(int i = 0; i < r; i++) {
+                putchar(recv_buf[i]);
+		
+            }*/
+            if (body_start == NULL) {
+            	/* Look for the blank line signaling the start of the body */
+            	body_start = strstr(recv_buf, "\r\n\r\n");
+            	if (body_start != NULL) {
+     	            /* Move past the blank line */
+                    body_start += 4;
+            	}
+            }
+            if (r > 0 && body_start != NULL) {
+		int body_len = r - (body_start - recv_buf);
+            	//printf("Body: %.*s", body_len, body_start);
+		
+		body_content = (char*)malloc(body_len + 1); // Allocate memory for the body content (+1 for null terminator
+                strncpy(body_content, body_start, body_len); // Copy the body content into the allocated memory
+                body_content[body_len] = '\0'; // Null-terminate the string
+
+            }
+        } while(r > 0);
+        
+    ...
+       
+	  return body_content;
+}
+```
+I adjusted this function from Lab 5.1 to suit this lab better. Since the GET request is now customizable, I first have to fill in the format specifiers in GET_REQUEST_FORMAT with the appropriate web path, web server and port, and store it in GET_REQUEST.
+
+I also removed the while loop in this function to fit this lab better since I now have to send different requests in a row, so I cant have an infinite loop in a function that only sends one kind of request.
+
+Reading the HTTP response is also slightly different, since I need to extract only the body content. To do this, I iterate over the response until the blank line that indicates the start of the body is found. Once the blank line is found, the body content is stored in body_content. The body content is returned since I will have to use it later.
+
+### HTTP POST request
+
+```
+static const char *POST_REQUEST_FORMAT = "POST %s HTTP/1.0\r\n"
+    "Host: %s:%s\r\n"
+    "User-Agent: esp-idf/1.0 esp32\r\n"
+    "Content-Type: text/plain; charset=utf-8\r\n"
+    "Content-Length: %d\r\n"
+    "\r\n"
+    "%s";
+
+static const char *POST_DATA = "Temperature is %.2fC (or %.2fF) with a %.2f%%  humidity\n"
+    "Weather from wttr.in: %s\n";
+```
+The POST request is now also customizable for different web paths, web servers and port numbers. The post data is also customizable with the sensor readings.
+
+```
+static void http_post_request(void *pvParameters, char* weather_data)
+{
+  ...
+  
+  /* Prepare HTTP POST request */
+	int post_data_len = strlen(post_data);
+	char post_request[strlen(POST_REQUEST_FORMAT) + post_data_len + 256];
+	sprintf(post_request, POST_REQUEST_FORMAT, web_path, web_server, web_port, post_data_len, post_data);
+  
+  ...
+```
+
+I also removed the while loop in this function for the same reason as before.
+
+Preparing the POST request now additionally includes specifying the web path, web server and port number.
+
+### HTTPS GET request
+
+```
+static const char HOWSMYSSL_REQUEST_FORMAT[] = "GET %s HTTP/1.1\r\n"
+                             "Host: %s:%s\r\n"
+                             "User-Agent: esp-idf/1.0 esp32\r\n"
+                             "Accept: */*\r\n"
+                             "\r\n";
+
+char HOWSMYSSL_REQUEST[512];
+```
+[TODO: Explanation]
+
+```
+static char* https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, const char *REQUEST)
+{
+    ...
+
+    char* body_content = NULL;
+    
+    ...
+    
+    char* body_start = NULL;	
+	if (body_start == NULL) {
+                /* Look for the blank line signaling the start of the body */
+                body_start = strstr(buf, "\r\n\r\n");
+                if (body_start != NULL) {
+                    /* Move past the blank line */
+                    body_start += 4;
+                }
+            }
+            if (ret > 0 && body_start != NULL) {
+                int body_len = ret - (body_start - buf);
+                //printf("Body: %.*s", body_len, body_start);
+
+		body_content = (char*)malloc(body_len + 1); // Allocate memory for the body content (+1 for null terminator
+		strncpy(body_content, body_start, body_len); // Copy the body content into the allocated memory
+    		body_content[body_len] = '\0'; // Null-terminate the string
+            }
+    ...
+    
+    return body_content;
+}
+```
+[TODO: Explanation]
+
+```
+static char* https_get_request_lab(void)
+{
+    sprintf(HOWSMYSSL_REQUEST, HOWSMYSSL_REQUEST_FORMAT, web_path, web_server, web_port);
+    ESP_LOGI(TAG, "https_request using crt bundle (lab function)");
+    esp_tls_cfg_t cfg = {
+        .crt_bundle_attach = esp_crt_bundle_attach,
+    };
+    char* ret = https_get_request(cfg, web_url, HOWSMYSSL_REQUEST);
+    return ret;
+}
+```
+[TODO: Explanation]
+
+[TODO: lab5_3_task]
+
+## app.py
+
 
 
 ## Issues
