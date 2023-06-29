@@ -116,7 +116,7 @@ static const char HOWSMYSSL_REQUEST_FORMAT[] = "GET %s HTTP/1.1\r\n"
 
 char HOWSMYSSL_REQUEST[512];
 ```
-[TODO: Explanation]
+The HTTPS GET request is also customizable for different web paths, web servers and port numbers.
 
 ```
 static char* https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, const char *REQUEST)
@@ -149,7 +149,7 @@ static char* https_get_request(esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, co
     return body_content;
 }
 ```
-[TODO: Explanation]
+Just like for the HTTP GET request, I need to extract only the body content. To do this, I iterate over the response until the blank line that indicates the start of the body is found. Once the blank line is found, the body content is stored in body_content. The body content is returned since I will have to use it later.
 
 ```
 static char* https_get_request_lab(void)
@@ -163,13 +163,47 @@ static char* https_get_request_lab(void)
     return ret;
 }
 ```
-[TODO: Explanation]
+In this function, I first fill in the format specifiers in HOWSMYSSL_REQUEST_FORMAT with the appropriate web path, web server and port, and store it in HOWSMYSSL_REQUEST.
 
-[TODO: lab5_3_task]
+I am using the crt bundle method to send the HTTPS request using the https_get_request function.
+
+### lab5_3_task
+
+This task combines all the functions for sending requests to fulfill the lab requirements. 
+
+It first sends a HTTP GET request to the server hosted on the Pi to obtain the location stored in it. The location is obtained from the reponse and the appropriate web url is constructed to request the weather from that location from wttr.com. Then, an HTTPS GET request is sent to wttr.com with the constructed web url. The response is then stored in body_content. Lastly, the body_content is sent to the server hosted on the Pi using an HTTP POST request. 
 
 ## app.py
 
+```
+class MyHandler(http.server.BaseHTTPRequestHandler):
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        print(post_data.decode('utf-8'))
 
+    def do_GET(self):
+        if self.path == '/location':
+            # Send an HTTP response with a 200 OK status code and some content
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(b'Santa+Cruz')
+
+            # Log the request that was received
+            print(f'Received GET request to {self.path}')
+
+        else:
+            # Send an HTTP response with a 404 Not Found status code
+            self.send_error(404)
+
+PORT = 1234
+
+with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
+    print("Server started on port", PORT)
+    httpd.serve_forever()
+```
+This implements a simple server on the Pi that can handle POST and GET requests. If it receives a POST request, it simply prints the content. If it receives a GET request to the /location path, it returns the specified location, in this case, Santa Cruz. It cannot handle GET requests to any other paths.
 
 ## Issues
 
