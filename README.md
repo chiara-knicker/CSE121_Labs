@@ -135,3 +135,7 @@ https://github.com/Arduinolibrary/DFRobot_Gravity_I2C_LCD1602_Display_module/raw
 ## Lab 5
 Wifi example <br>
 https://github.com/espressif/esp-idf/tree/17451f1fb3d6485af5113d96b6836a7ce60efee8/examples/wifi/getting_started/station
+
+## Lab 6
+Raspberry Pi GPIO Pinout <br>
+https://pinout.xyz/#
