@@ -176,12 +176,6 @@ It first sends a HTTP GET request to the server hosted on the Pi to obtain the l
 ## app.py
 
 ```
-class MyHandler(http.server.BaseHTTPRequestHandler):
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        print(post_data.decode('utf-8'))
-
     def do_GET(self):
         if self.path == '/location':
             # Send an HTTP response with a 200 OK status code and some content
@@ -196,14 +190,8 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         else:
             # Send an HTTP response with a 404 Not Found status code
             self.send_error(404)
-
-PORT = 1234
-
-with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
-    print("Server started on port", PORT)
-    httpd.serve_forever()
 ```
-This implements a simple server on the Pi that can handle POST and GET requests. If it receives a POST request, it simply prints the content. If it receives a GET request to the /location path, it returns the specified location, in this case, Santa Cruz. It cannot handle GET requests to any other paths.
+The server is the same as for Lab 5.2, but it can now additionally handle GET requests as well. If it receives a GET request to the /location path, it returns the specified location, in this case Santa Cruz. It cannot handle GET requests to any other paths and will return a 404 error if it receives one.
 
 ## Issues
 
