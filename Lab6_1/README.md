@@ -32,7 +32,7 @@ void blinkLED(const char* code) {
     }
 }
 ```
-This function is responsible for blinking the LED according to a provided morse code sequence. The symbol '.' respresents a short blink, the symbol '-' represents a long blink. For some reason, I have to send a LOW signal to turn the LED on and a HIGH signal to turn it off. It used to be the other way around, but stopped working suddenly, so I had to change it.
+This function is responsible for blinking the LED according to a provided morse code sequence. The symbol '.' respresents a short blink, the symbol '-' represents a long blink.
 
 ```
 int main(int argc, char** argv) {
@@ -84,3 +84,7 @@ Once all the characters have been processed, the LED is turned off by setting th
 }
 ```
 Finally, the program returns 0 to indicate successful execution.
+
+## Issues
+
+Initially, I sent a HIGH signal to turn the LED on and a LOW signal to turn it off. However, at some point that stopped working and caused issues. I noticed that the LED was turning on when sending a LOW signal and off when sending a HIGH signal, so I changed my code accordingly. I could not figure out why this happened.
