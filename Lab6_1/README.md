@@ -4,7 +4,7 @@
 
 The GPIO pinout for the Pi can be found here: https://pinout.xyz/#
 
-The LED is connected to the 5V power pin and the GPIO 18 pin together with a appropriate resistor.
+The LED is connected to the 5V power pin and the GPIO 18 pin together with an appropriate resistor.
 
 ## send.c
 
