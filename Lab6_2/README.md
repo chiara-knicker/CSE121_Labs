@@ -22,8 +22,6 @@ const char* morseCode[] = {
 ```
 This is a dictionary that contains the appropriate morse code for each letter of the alphabet.
 
-TODO:
-
 ```
 char decodeMorse(const char* signal) {
     for (int i = 0; i < 26; i++) {
@@ -33,81 +31,47 @@ char decodeMorse(const char* signal) {
     }
     return '?';  // Return '?' if no match is found
 }
-
+```
+This function takes a signal in Morse code as input and returns the corresponding decoded character. It iterates over the array of Morse code mappings (morseCode) and checks if the signal matches any of the Morse code patterns. If a match is found, it returns the corresponding character. Otherwise, it returns a question mark ('?').
+```
 #define ADC_CHANNEL ADC_CHANNEL_0
-
+```
+This line defines the ADC channel used for the light sensor. In this case, it's channel 0.
+```
 int getADCVal()
 {
     int val = adc1_get_raw(ADC_CHANNEL);
     return val;
 }
+```
+This function reads the ADC value from the light sensor connected to the ADC_CHANNEL. It uses the adc1_get_raw function provided by the ESP32C3 to obtain the raw ADC value and returns it.
+```
+void processSignal() {}
+```
+The processSignal function is the main function responsible for decoding the Morse code.
 
+It initializes variables for tracking the state of the signal (aboveThreshold, signalOn), measuring time (startTime, duration), storing the current Morse code signal (morseSignal), and storing the decoded character (decodedChar). morseSignal has a maximum length of 10 to accommodate the longest Morse code characters.
 
-// Function to measure signal durations and decode Morse code in real time
-void processSignal() {
-    int aboveThreshold = 0;
-    int signalOn = 0;
-    unsigned long startTime = esp_timer_get_time();
-    unsigned long duration = 0;
-    char morseSignal[10] = "";  // Maximum Morse code length
-    char decodedChar;
+It calls the getADCVal function to obtain the baseline ADC value (THRESHOLD) and prints it. This value will be used as a reference to differentiate between the LED being on and off. The threshold value (THRESHOLD) is increased by 10 to set a higher threshold for detecting the LED being on.
 
-    
-    int THRESHOLD = getADCVal();
-    printf("Base: %d\n", THRESHOLD);
+Inside an infinite loop, it continuously monitors the ADC value and decides if the signal is a dot, dash, or space (end of a character).
 
-    THRESHOLD = THRESHOLD + 10;
-    printf("Threshold: %d\n", THRESHOLD);
+If the ADC value is above the threshold (THRESHOLD), it indicates that the LED is on. It sets the aboveThreshold flag and checks if the signal was off previously (signalOn is false). If so, it records the current time (startTime) and sets signalOn to true.
 
-    while (1) {
-        int adcValue = getADCVal();  // Function to get ADC value from the photodiode
-	//printf("ADC Value: %d\n", adcValue);
-        if (adcValue >= THRESHOLD) {
-            aboveThreshold = 1;
+If the ADC value is below the threshold, it indicates that the LED is off. It clears the aboveThreshold flag and checks if the signal was on previously (signalOn is true). If so, it calculates the duration of the signal by subtracting the startTime from the current time and stores it in duration. It then determines the signal type (dot or dash) based on the duration and appends the corresponding symbol ('.' or '-') to the morseSignal string.
 
-            if (!signalOn) {
-                startTime = esp_timer_get_time();
-                signalOn = 1;
-            }
-        } else {
-            aboveThreshold = 0;
+If the signal was not on previously, it checks if the duration exceeds a certain threshold (500000 microseconds) and if the morseSignal string is not empty. If both conditions are met, it means that it's the end of a character, so it calls the decodeMorse function to decode the Morse code stored in morseSignal and assigns the result to decodedChar. It then prints the decoded character and clears the morseSignal string.
 
-            if (signalOn) {
-                duration = esp_timer_get_time() - startTime;
-                signalOn = 0;
-
-                // Determine signal type based on duration
-                if (duration <= 500000) {
-                    strcat(morseSignal, ".");
-                } else {
-                    strcat(morseSignal, "-");
-		}
-
-		startTime = esp_timer_get_time();
-            } else {
-		 duration = esp_timer_get_time() - startTime;
-		 if (duration > 500000 && strlen(morseSignal) > 0) {
-		    // Decode the previous signal and print character
-                    decodedChar = decodeMorse(morseSignal);
-		    printf("%c\n", decodedChar);
-                    //fflush(stdout);
-                    memset(morseSignal, 0, sizeof(morseSignal));
-		}  
-	    }
-	}
-
-        vTaskDelay(pdMS_TO_TICKS(100));  // delay for 100 millisecond
-    }
-}
-
+After each iteration of the loop, it introduces a 100 millisecond delay using vTaskDelay to control the processing rate. This prevents the code from continuously checking the ADC value too frequently and provides some time for the LED signal to change.
+```
 int app_main() 
 {
     adc1_config_width(ADC_WIDTH_BIT_12);
     adc1_config_channel_atten(ADC_CHANNEL, ADC_ATTEN_DB_11);
        
-    // Call the function to process the Morse code signal in real time
     processSignal();
 
     return 0;
 }
 ```
+The app_main function is the entry point of the program. It configures the ADC width to 12 bits using adc1_config_width and sets the attenuation of the ADC channel to 11 dB using adc1_config_channel_atten. Then, it calls the processSignal function to start decoding the Morse code in real time.
