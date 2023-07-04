@@ -39,18 +39,22 @@ The CONNECTION constant is used to specify which wifi to connect to since I was 
     #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 
 #elif CONNECTION == 1
+    // Phone hotspot
+    #define EXAMPLE_ESP_WIFI_SSID      NAME_WIFI_HOTSPOT
+    #define EXAMPLE_ESP_WIFI_PASS      PASSWORD_WIFI_HOTSPOT
+    #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 
 ...
 
 #elif CONNECTION == 3
     // Eduroam
     #define EXAMPLE_ESP_WIFI_SSID      "eduroam"
-    #define EXAMPLE_ESP_WIFI_USER      "user email"
-    #define EXAMPLE_ESP_WIFI_PASS      "password"
+    #define EXAMPLE_ESP_WIFI_USER      EMAIL_WIFI_EDUROAM
+    #define EXAMPLE_ESP_WIFI_PASS      PASSWORD_WIFI_EDUROAM
     #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 #endif
 ```
-This specifies the Wifi SSID, Wifi password and maximum number of retries for several wifi networks. The first one uses the values specified in menuconfig (idf.py menuconfig). The following ones are different wifi networks I connected to when working on the lab. The last one is to connect to Eduroam. Thisadditionally specifies the user since Eduroam has some extra authorization that regular wifi networks like the typical home wifi don't have.
+This specifies the Wifi SSID, Wifi password and maximum number of retries for several wifi networks. The first one uses the values specified in menuconfig (idf.py menuconfig). The following ones are different wifi networks I connected to when working on the lab. They get the names and passwords from the config.h file and have to be changed to suit the wifi networks you are using. There is a config-template.h file that demonstrates what the file is supposed to look like. CONNECTION 3 is to connect to Eduroam. This additionally specifies the user since Eduroam has some extra authorization that regular wifi networks like the typical home wifi don't have.
 
 ```
 static void event_handler(void* arg, esp_event_base_t event_base,
@@ -87,17 +91,9 @@ void wifi_init_sta(void)
     // Eduroam 
     if (CONNECTION == 3) {
     	// Eduroam
-	    wifi_config_t wifi_config = {
-            .sta = {
-            	.ssid = EXAMPLE_ESP_WIFI_SSID,
-            	.password = "username:password",
-            	.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE,
-	    	.pmf_cfg = {
-                    .capable = true,
-                    .required = false,
-            	},
-            },
-    	};
+	wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE;
+        wifi_config.sta.pmf_cfg.capable = true;
+        wifi_config.sta.pmf_cfg.required = false;
 
     	// Enable EAP-PEAP authentication
     	esp_wifi_sta_wpa2_ent_enable();
@@ -118,7 +114,7 @@ s_wifi_event_group = xEventGroupCreate(): This creates an event group using the 
 
 The wifi_config struct contains various fields for configuring the connection to a regular wifi network with a password.
 
-If the connection is Eduroam, a few extra fields need to be set for successful authorization to connect to it. To do this, I am redefining the wifi_config variable with the appropriate values. The password parameter now includes the username. Additionally, EAP-PEAP authentication needs to be enabled, which is the authentication that Eduroam uses. Finally, the EAP identity needs to be set, which include setting the username and password.
+If the connection is Eduroam, a few extra fields need to be set for successful authorization to connect to it. To do this, I am updating the wifi_config variable with the appropriate values. Additionally, EAP-PEAP authentication needs to be enabled, which is the authentication that Eduroam uses. Finally, the EAP identity needs to be set, which include setting the username and password.
 
 ### Sending HTTP(S) GET requests
 
@@ -140,7 +136,7 @@ static void http_get_task(void *pvParameters)
 ```
 This is the task to send the specified GET request.
 
-### HTTPS
+#### HTTPS
 
 ```
 static const char HOWSMYSSL_REQUEST[] = "GET " WEB_PATH " HTTP/1.1\r\n"
