@@ -3,3 +3,4 @@
 build/
 sdkconfig
 riscv32-esp-elf-gdb/
+config.h
