@@ -40,14 +40,14 @@ const char* morseCode[] = {
 void blinkLED(const char* code) {
     for (int i = 0; i < strlen(code); i++) {
         if (code[i] == '.') {
-            digitalWrite(LED_PIN, LOW);
-            delay(250);
             digitalWrite(LED_PIN, HIGH);
+            delay(250);
+            digitalWrite(LED_PIN, LOW);
             delay(250);
         } else if (code[i] == '-') {
-            digitalWrite(LED_PIN, LOW);
-            delay(750);
             digitalWrite(LED_PIN, HIGH);
+            delay(750);
+            digitalWrite(LED_PIN, LOW);
             delay(250);
         }
     }
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
     }
 
     // Turn off the LED
-    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(LED_PIN, LOW);
 
     return 0;
 }
