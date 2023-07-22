@@ -177,8 +177,8 @@ void hid_demo_task(void *pvParameters)
 	    uint8_t button = 0;
 	    // send mouse values
 	    esp_hidd_send_mouse_value(hid_conn_id, button, move_x, move_y);
-	    vTaskDelay(pdMS_TO_TICKS(5000));
         }
+	vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }
 
