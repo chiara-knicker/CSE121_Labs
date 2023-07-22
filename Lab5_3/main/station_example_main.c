@@ -32,7 +32,6 @@
 
 static const char *TAG = "wifi station";
 
-/* FreeRTOS event group to signal when we are connected*/
 static const char* web_server = "www.example.com";
 static const char* web_port = "80";
 static const char* web_url = "";
@@ -81,7 +80,7 @@ static void lab5_3_task(void *pvparameters)
     sprintf(GET_REQUEST, GET_REQUEST_FORMAT, web_path, web_server, web_port);
 
     body_content = http_get_request(NULL, web_server, web_port, GET_REQUEST);
-    printf("Body content GET to Pi: %s\n", body_content);
+    printf("Server Response (Location): %s\n", body_content);
 
     /*----------------- HTTPS GET to wttr.in ---------------------*/
     ESP_LOGI(TAG, "Start https_request to wttr.in");
@@ -92,8 +91,12 @@ static void lab5_3_task(void *pvparameters)
     char web_url_temp[strlen(web_url_format) + strlen(body_content) + 1];
     sprintf(web_url_temp, web_url_format, body_content);
     web_url = web_url_temp;
-    web_path = "/Santa+Cruz?format=%l:+%c+%t/";
+    char* web_path_format = "/%s?format=%%l:+%%c+%%t/";
+    char web_path_temp[strlen(web_path_format) + strlen(body_content) + 1];
+    sprintf(web_path_temp, web_path_format, body_content);
+    web_path = web_path_temp;
     printf("This is the web URL: %s\n", web_url);
+    printf("This is the web path: %s\n", web_path);
 
 #ifdef CONFIG_EXAMPLE_CLIENT_SESSION_TICKETS
     char *server_url = NULL;
@@ -121,7 +124,7 @@ static void lab5_3_task(void *pvparameters)
 
     sprintf(HOWSMYSSL_REQUEST, HOWSMYSSL_REQUEST_FORMAT, web_path, web_server, web_port);
     body_content = https_get_request_using_crt_bundle(web_url, HOWSMYSSL_REQUEST);
-    printf("Body content GET to wttr.in: %s\n", body_content);
+    printf("Response from wttr.in: %s\n", body_content);
     //free(body_content);
     ESP_LOGI(TAG, "Finish https_request to wttr.in");
 
@@ -155,7 +158,7 @@ static void lab5_3_task(void *pvparameters)
     //while(1) {
     	http_post_request(NULL, web_server, web_port, post_request);
 	free(body_content);
-    	printf("POST request sent to Pi\n");
+    	printf("POST request sent to Server\n");
 	vTaskDelay(pdMS_TO_TICKS(5000));
     }
     vTaskDelete(NULL);

@@ -26,21 +26,13 @@
 #include "lwip/dns.h"
 #include "sdkconfig.h"
 
-// Additions for HTTPS requests
-/*#include <stdlib.h>
-#include <inttypes.h>
-#include <time.h>
-#include <sys/time.h>
-#include "esp_timer.h"
-#include "nvs.h"
-#include "esp_sntp.h"
-#include "esp_netif.h"*/
-
 #include "esp_tls.h"
 #if CONFIG_MBEDTLS_CERTIFICATE_BUNDLE
 #include "esp_crt_bundle.h"
 #endif
-//#include "time_sync.h"
+
+// Passwords
+#include "../../config.h"
 
 /* Constants that aren't configurable in menuconfig */
 #define WEB_SERVER "www.wttr.in"
@@ -70,21 +62,21 @@
 
 #elif CONNECTION == 1
     // Phone hotspot
-    #define EXAMPLE_ESP_WIFI_SSID      "exampleWifi"
-    #define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
+    #define EXAMPLE_ESP_WIFI_SSID      NAME_WIFI_HOTSPOT
+    #define EXAMPLE_ESP_WIFI_PASS      PASSWORD_WIFI_HOTSPOT
     #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 
 #elif CONNECTION == 2
     // Home wifi
-    #define EXAMPLE_ESP_WIFI_SSID      "exampleWifi"
-    #define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
+    #define EXAMPLE_ESP_WIFI_SSID      NAME_WIFI_HOME
+    #define EXAMPLE_ESP_WIFI_PASS      PASSWORD_WIFI_HOME
     #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 
 #elif CONNECTION == 3
     // Eduroam
     #define EXAMPLE_ESP_WIFI_SSID      "eduroam"
-    #define EXAMPLE_ESP_WIFI_USER      "exampleEmail"
-    #define EXAMPLE_ESP_WIFI_PASS      "examplePassword"
+    #define EXAMPLE_ESP_WIFI_USER      EMAIL_WIFI_EDUROAM
+    #define EXAMPLE_ESP_WIFI_PASS      PASSWORD_WIFI_EDUROAM
     #define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
 #endif
 
@@ -195,22 +187,9 @@ void wifi_init_sta(void)
     // Eduroam 
     if (CONNECTION == 3) {
     	// Eduroam
-	/*//wifi_config.sta.password = "exampleEmail:examplePassword";
         wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE;
         wifi_config.sta.pmf_cfg.capable = true;
-        wifi_config.sta.pmf_cfg.required = false;*/
-    	
-	wifi_config_t wifi_config = {
-            .sta = {
-            	.ssid = EXAMPLE_ESP_WIFI_SSID,
-            	.password = "exampleEmail:examplePassword",
-            	.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE,
-	    	.pmf_cfg = {
-                    .capable = true,
-                    .required = false,
-            	},
-            },
-    	};
+        wifi_config.sta.pmf_cfg.required = false;
 
     	// Enable EAP-PEAP authentication
     	esp_wifi_sta_wpa2_ent_enable();

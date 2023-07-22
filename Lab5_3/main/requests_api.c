@@ -100,7 +100,6 @@ void wifi_init_sta(void)
     // Eduroam 
     if (CONNECTION == 3) {
     	// Eduroam
-	//wifi_config.sta.password = "exampleEmail:examplePassword";
         wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_ENTERPRISE;
         wifi_config.sta.pmf_cfg.capable = true;
         wifi_config.sta.pmf_cfg.required = false;
