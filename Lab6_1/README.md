@@ -4,7 +4,22 @@
 
 The GPIO pinout for the Pi can be found here: https://pinout.xyz/#
 
-The LED is connected to the 5V power pin and the GPIO 18 pin together with an appropriate resistor.
+The LED is connected to the 5V power pin and the GPIO 18 pin of the Pi, together with an appropriate resistor.
+
+## WiringPi
+
+For this Lab, I used the wiringPi library. Instructions on how to install it can be found here: <br>
+https://tutorials-raspberrypi.com/installing-wiringpi-and-pin-allocation/?utm_content=cmp-true
+
+Command to compile the c file:
+```
+gcc [file name].c -lwiringPi -o [executable name]
+```
+
+Command to run executable:
+```
+./[executable name] string
+```
 
 ## send.c
 
@@ -19,14 +34,14 @@ This is a dictionary that contains the appropriate morse code for each letter of
 void blinkLED(const char* code) {
     for (int i = 0; i < strlen(code); i++) {
         if (code[i] == '.') {
-            digitalWrite(LED_PIN, LOW);
-            delay(250);
             digitalWrite(LED_PIN, HIGH);
+            delay(250);
+            digitalWrite(LED_PIN, LOW);
             delay(250);
         } else if (code[i] == '-') {
-            digitalWrite(LED_PIN, LOW);
-            delay(750);
             digitalWrite(LED_PIN, HIGH);
+            delay(750);
+            digitalWrite(LED_PIN, LOW);
             delay(250);
         }
     }
@@ -76,7 +91,7 @@ The code then converts the input string to uppercase to avoid worrying about cas
 A for loop is used to iterate over each character of the converted string. It checks if the character is an uppercase letter (A-Z) and if so, it calculates the index for accessing the corresponding Morse code in the morseCode array. It subtracts the character 'A' from the current character to get the index value. The blinkLED function is called with the Morse code corresponding to the current character. After blinking the LED, the program adds a delay of 500 milliseconds which provides a pause between each character in the Morse code sequence.
 ```
     // Turn off the LED
-    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(LED_PIN, LOW);
 ```
 Once all the characters have been processed, the LED is turned off by setting the LED pin to a high state using the digitalWrite function.
 ```
@@ -84,7 +99,3 @@ Once all the characters have been processed, the LED is turned off by setting th
 }
 ```
 Finally, the program returns 0 to indicate successful execution.
-
-## Issues
-
-Initially, I sent a HIGH signal to turn the LED on and a LOW signal to turn it off. However, at some point that stopped working and caused issues. I noticed that the LED was turning on when sending a LOW signal and off when sending a HIGH signal, so I changed my code accordingly. I could not figure out why this happened.
