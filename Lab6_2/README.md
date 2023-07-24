@@ -4,7 +4,7 @@
 
 The GPIO pinout for the Pi can be found here: https://pinout.xyz/#
 
-[TODO: Explain wiring}
+![Lab6_2_Wiring drawio](https://github.com/chiara-knicker/CSE121_Labs/assets/120240559/049f1b45-e1bf-4780-81da-285f1a6ae46c)
 
 ## Lab6_2.c
 
