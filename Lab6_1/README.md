@@ -4,7 +4,7 @@
 
 The GPIO pinout for the Pi can be found here: https://pinout.xyz/#
 
-The LED is connected to the 5V power pin and the GPIO 18 pin of the Pi, together with an appropriate resistor.
+The LED anode is connected to the 5V power pin of the Pi and the cathode is connected to the GPIO 18 pin of the Pi. Also add an appropriate resistor to the circuit.
 
 ## WiringPi
 
