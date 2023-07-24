@@ -2,7 +2,7 @@
 
 ## Setup
 
-[TODO: Explain wiring]
+![Lab7_1_Wiring](https://github.com/chiara-knicker/CSE121_Labs/assets/120240559/5eb20c79-dedf-4bc4-b366-d109f62cc338)
 
 ## Lab7_1.c
 
