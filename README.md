@@ -140,6 +140,9 @@ https://github.com/espressif/esp-idf/tree/17451f1fb3d6485af5113d96b6836a7ce60efe
 Raspberry Pi GPIO Pinout <br>
 https://pinout.xyz/#
 
-## Lab 6
+WiringPi Library <br>
+https://tutorials-raspberrypi.com/installing-wiringpi-and-pin-allocation/?utm_content=cmp-true
+
+## Lab 7
 Ultrasonic Sensor <br>
 https://lastminuteengineers.com/arduino-sr04-ultrasonic-sensor-tutorial/?utm_content=cmp-true
