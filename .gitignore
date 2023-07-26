@@ -4,3 +4,5 @@ build/
 sdkconfig
 riscv32-esp-elf-gdb/
 config.h
+managed_components/
+dependencies.lock
