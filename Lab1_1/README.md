@@ -36,7 +36,9 @@ network:
                         identity: "your_eduroam_email"
                         phase2-auth: "MSCHAPV2"
 ```
-Apply changes
+Make sure to replace the wifi names, passwords and eduroam credentials with your own.
+
+Apply changes:
 ```
 netplan generate
 ```
