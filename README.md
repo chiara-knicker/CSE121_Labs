@@ -1,5 +1,5 @@
-# CSE121_Labs
-Labs for CSE 121 Spring 2023
+# CSE 121 Labs
+Labs for CSE 121 Spring 2023 at UCSC
 
 # Hardware
 - Raspberyy Pi 4
@@ -26,7 +26,7 @@ sudo apt-get install fish neovim g++ git wget flex bison gperf python3 python3-v
 
 2. Get ESP32 software toolchain
 ```
-cd ~/CSE121_Labs
+cd ~
 ```
 ```
 git clone --recursive https://github.com/espressif/esp-idf.git
@@ -41,7 +41,7 @@ cd esp-idf
 . export.sh
 ```
 
-Need to rerun . export.sh after each shutdown of the Pi4
+Need to rerun ```. export.sh``` for each new session.
 
 # Run labs
 ```
@@ -56,9 +56,12 @@ idf.py flash
 ```
 idf.py monitor
 ```
-
+You can do multiple commands in one line:
+```
+idf.py flash monitor
+```
 To stop monitor:  
-ctrl+] or ctrl+t ctrl+x for some keyboards (e.g. German)
+```ctrl+]``` or ```ctrl+t ctrl+x``` for some keyboards (e.g. German)
 
 Flash automatically builds before flashing. To only build, run this after setting the target:  
 ```
@@ -78,7 +81,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
 cat [path-to-public-key]/id_ed25519.pub
 ```
-"Settings" > "SSH and GPG keys"
+Go to "Settings" > "SSH and GPG keys"
 
 Paste the public key you copied
 
@@ -91,10 +94,7 @@ git config --global user.name "your_name"
 ```
 
 # Issues encountered
-When trying to flash the first time, I got this Error:
-```
-(need to reproduce error)
-```
+When trying to flash the first time, I got an error saying the device could not be found.
 It turned out that the cable I was using to connect the ESP32 to the Pi4 was only for charging. When I used a different cable it worked.
 
 # Resources
