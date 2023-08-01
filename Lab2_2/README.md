@@ -72,7 +72,7 @@ i2c_param_config() sets the I2C configuration for the specified I2C port.
     }
 
 ```
-i2c_driver_install() installs the I2C driver for a specific I2C bus. The 0 is the clock speed of the I2C bus, which is set to the default value of 100kHz. (Should have used I2C_MASTER_FREQ_HZ ???)
+i2c_driver_install() installs the I2C driver for a specific I2C bus. The 0 is the clock speed of the I2C bus, which is set to the default value of 100kHz.
 
 ## Read Temperature and Humidity
 ```
@@ -121,13 +121,19 @@ vTaskDelay(pdMS_TO_TICKS(20));
 ```
 After sending the command to the sensor, the function waits for 20 milliseconds to allow the sensor to complete the measurement.
 ```
+i2c_cmd_link_delete(cmd)
+```
+This deletes the I2C command handle as it is no longer needed.
+
+Next, we need to read the data that the sensor sends.
+```
 i2c_master_write_byte(cmd, (SHTC3_SENSOR_ADDR << 1) | I2C_MASTER_READ, true);
 ```
-This sends the sensor's address and the read bit.
+This sends the sensor's address and the read bit since we are not sending anything to the sensor this time, but reading its measurements.
 ```
 i2c_master_read(cmd, data, size, I2C_MASTER_LAST_NACK);
 ```
-This reads the data from the sensor and store it in the data array.
+This reads the data from the sensor and stores it in the data array.
 
 ## Calculate Temperature and Humidity
 calculate_humidity, calculate_temp and calculate_temp_f take the raw measurement and return the actual humidity and temperature value (Celsius and Fahrenheit). The formulas can be found on the sensor datasheet (5.11).
