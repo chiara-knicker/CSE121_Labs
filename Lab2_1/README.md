@@ -3,12 +3,15 @@ Create new project
 ```
 idf.py create-project Lab2_1
 ```
-Set target
+Set target and build
 ```
 cd Lab2_1
 ```
 ```
 idf.py set-target esp32c3
+```
+```
+idf.py build
 ```
 Move elf file to build folder and rename it to existing elf file name
 ```
