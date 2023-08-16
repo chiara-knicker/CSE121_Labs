@@ -6,6 +6,8 @@ The GPIO pinout for the Pi can be found here: https://pinout.xyz/#
 
 ![Lab6_2_Wiring drawio](https://github.com/chiara-knicker/CSE121_Labs/assets/120240559/049f1b45-e1bf-4780-81da-285f1a6ae46c)
 
+Using a high resistor for the photodiode improves sensitivity. Bending it so that the top points towards the LED also helps.
+
 ## Lab6_2.c
 
 ```
@@ -36,7 +38,7 @@ This function takes a signal in Morse code as input and returns the correspondin
 ```
 #define ADC_CHANNEL ADC_CHANNEL_0
 ```
-This line defines the ADC channel used for the light sensor. In this case, it's channel 0.
+This line defines the ADC channel used for the photodiode. In this case, it's channel 0.
 ```
 int getADCVal()
 {
@@ -44,7 +46,7 @@ int getADCVal()
     return val;
 }
 ```
-This function reads the ADC value from the light sensor connected to the ADC_CHANNEL. It uses the adc1_get_raw function provided by the ESP32C3 to obtain the raw ADC value and returns it.
+This function reads the ADC value from the photodiode connected to the ADC_CHANNEL. It uses the adc1_get_raw function provided by the ESP32C3 to obtain the raw ADC value and returns it.
 ```
 void processSignal() {}
 ```
