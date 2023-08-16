@@ -79,3 +79,62 @@ void gyr_conf() {
 }
 ```
 This configures the gyroscope by writing to the GYRO_CONFIG0 register. 
+
+# I2C Read
+
+```
+uint8_t i2c_read(uint8_t reg)
+{
+  uint8_t data;
+
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+
+  i2c_master_start(cmd);
+  i2c_master_write_byte(cmd,(ICM_ADDR << 1) | I2C_MASTER_WRITE, true);
+  i2c_master_write_byte(cmd, reg, true);
+  i2c_master_start(cmd); 
+  i2c_master_write_byte(cmd, (ICM_ADDR << 1) | I2C_MASTER_READ, true);
+  i2c_master_read_byte(cmd, &data, I2C_MASTER_ACK);
+  i2c_master_stop(cmd);
+  i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
+  i2c_cmd_link_delete(cmd);
+
+  return data;
+}
+```
+This is similar to the ```i2c_write```, but after writing the register that contains the data we want to read, it sends another start condition and the sensor address, but this time it sends the read bit. Contents of the register are then stored in the data variable. The datasheet (9.4) specifies how to read to the sensor registers via I2C.
+```
+void read_gyro() {
+  int16_t gyro_x_raw, gyro_y_raw, gyro_z_raw;
+  gyro_x_raw = (i2c_read(0x11) << 8) | i2c_read(0x12);
+  gyro_y_raw = (i2c_read(0x13) << 8) | i2c_read(0x14);
+  gyro_z_raw = (i2c_read(0x15) << 8) | i2c_read(0x16);
+
+  float gyro_x, gyro_y, gyro_z;
+  gyro_x = gyro_x_raw / 16.4;
+  gyro_y = gyro_y_raw / 16.4;
+  gyro_z = gyro_z_raw / 16.4;
+
+...
+
+}
+```
+To read the gyroscope values, ```read_gyro``` utilises the i2c_read function to read the registers with the relevant data. Each value (x, y, z) is 2 bytes (datasheet 6.1, 15.16, 15,17) so the function combines the values from two registers using bit shifting and the OR operator. The datasheet (14.1) provides the register addresses where the values are stored: 0x11 to 0x16. The gyro is configured with a range of +-2000dps. The corresponding sensitivity scale factor is 16.4 (datasheet 3.1), so the raw value needs to be divided by 16.4 to get the correct measurement. 
+
+```
+void read_accel() {
+  int16_t acc_x_raw, acc_y_raw, acc_z_raw;
+  acc_x_raw = (i2c_read(0x0B) << 8) | i2c_read(0x0C);
+  acc_y_raw = (i2c_read(0x0D) << 8) | i2c_read(0x0E);
+  acc_z_raw = (i2c_read(0x0F) << 8) | i2c_read(0x10);
+
+  float acc_x, acc_y, acc_z;
+  acc_x = (float) acc_x_raw / 2048;
+  acc_y = (float) acc_y_raw / 2048;
+  acc_z = (float) acc_z_raw / 2048;
+
+...
+
+}
+```
+```read_acel```is basically the same as ```read_gyro```. The only differences are the register addresses for the accelerometer values and the sensitivity scale factor.
